@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clustering"
+version = "0.0.1"
+authors = [
+  { name = "Ryuto Yoshida" },
+]
+description = "Unified sklearn-backed clustering with parameter objects and a common processor API."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "scikit-learn",
+    "scipy",
+]
+
+[project.urls]
+Homepage = "https://github.com/ry-yoshida-private/Clustering"
+"Bug Tracker" = "https://github.com/ry-yoshida-private/Clustering/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
