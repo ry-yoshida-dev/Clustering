@@ -23,8 +23,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ry-yoshida-private/Clustering"
-"Bug Tracker" = "https://github.com/ry-yoshida-private/Clustering/issues"
+Homepage = "https://github.com/ry-yoshida-dev/Clustering"
+"Bug Tracker" = "https://github.com/ry-yoshida-dev/Clustering/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
