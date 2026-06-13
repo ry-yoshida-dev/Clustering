@@ -6,6 +6,8 @@ from typing import Any, Iterator, cast
 import numpy as np
 from numpy.typing import ArrayLike, DTypeLike, NDArray
 
+from .types import BoolArray
+
 
 @dataclass(frozen=True)
 class ClusteringLabels:
@@ -203,7 +205,7 @@ class ClusteringLabels:
     def get_mask(
         self,
         label: int,
-    ) -> np.ndarray:
+    ) -> BoolArray:
         """
         Get the mask of the label.
 
@@ -214,7 +216,7 @@ class ClusteringLabels:
 
         Returns:
         ----------
-        np.ndarray
+        BoolArray
             The mask of the label with shape (n,).
         """
         return self.labels == label

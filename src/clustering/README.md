@@ -8,11 +8,12 @@ This module provides a unified interface for scikit-learn clustering algorithms,
 
 | Component | Description |
 |-----------|-------------|
+| [types.py](./types.py) | Shared type aliases (`NumericArray`, `IntegerArray`, `BoolArray`). |
 | [method.py](./method.py) | Enum defining available clustering methods (KMeans, Agglomerative, DBSCAN, HDBSCAN, GMM). |
 | [parameter.py](./parameter.py) | Abstract base class for clustering parameters. |
 | [processor.py](./processor.py) | Abstract base class for clustering processors with unified interface (fit, predict, fit_predict). |
 | [builder.py](./builder.py) | Factory function for building clustering processors from configuration. |
-| [processors/](./processors/) | Concrete implementations of clustering processors (CommonClusteringProcessor, GMMClusteringProcessor). |
+| [processors/](./processors/README.md) | Concrete implementations of clustering processors and sklearn structural typing protocols. |
 | [methods/](./methods/README.md) | Parameter classes and enums for specific clustering methods (K-Means, Agglomerative, GMM). |
 
 

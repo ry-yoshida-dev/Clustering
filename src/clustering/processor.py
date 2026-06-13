@@ -3,8 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-import numpy as np
-
+from .types import NumericArray
 from .method import ClusteringMethod
 from .result import ClusteringLabels
 
@@ -14,7 +13,7 @@ class ClusteringProcessor(ABC):
     method: ClusteringMethod
 
     @abstractmethod
-    def fit(self, X: np.ndarray) -> None:
+    def fit(self, X: NumericArray) -> None:
         """
         Fit the clustering processor.
         Fit function does not return labels(we can get labels from labels_ property).
@@ -22,19 +21,19 @@ class ClusteringProcessor(ABC):
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
         """
 
     @abstractmethod
-    def predict(self, X: np.ndarray) -> ClusteringLabels:
+    def predict(self, X: NumericArray) -> ClusteringLabels:
         """
         Predict the clustering labels for new data.
         Predict function is implemented in KMeans and GMM.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:
@@ -44,13 +43,13 @@ class ClusteringProcessor(ABC):
         """
 
     @abstractmethod
-    def fit_predict(self, X: np.ndarray) -> ClusteringLabels:
+    def fit_predict(self, X: NumericArray) -> ClusteringLabels:
         """
         Fit the clustering processor and predict the clustering labels.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:

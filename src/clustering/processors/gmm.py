@@ -1,28 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol
 
-import numpy as np
-
+from ..types import IntegerArray, NumericArray
 from ..processor import ClusteringProcessor
 from ..result import ClusteringLabels
-
-
-class _GaussianMixtureLike(Protocol):
-    """
-    Structural type for sklearn GaussianMixture.
-
-    Sklearn type stubs leave fit, predict, and fit_predict partially unknown; this
-    protocol gives stable signatures for type checking without sprinkling ignores
-    on every call site.
-    """
-
-    def fit(self, X: np.ndarray, y: np.ndarray | None = None) -> object: ...
-
-    def predict(self, X: np.ndarray) -> np.ndarray: ...
-
-    def fit_predict(self, X: np.ndarray, y: np.ndarray | None = None) -> np.ndarray: ...
+from .protocols.gmm import GaussianMixtureLike
 
 
 @dataclass
@@ -32,39 +15,39 @@ class GMMClusteringProcessor(ClusteringProcessor):
 
     Attributes:
     ----------
-    processor: _GaussianMixtureLike
+    processor: GaussianMixtureLike
         The underlying sklearn GaussianMixture estimator (structural type).
-    labels_: np.ndarray | None
+    labels_: IntegerArray | None
         Cached labels from the last predict or fit_predict, if any.
     """
 
-    processor: _GaussianMixtureLike
-    labels_: np.ndarray | None = field(default=None, init=False)
+    processor: GaussianMixtureLike
+    labels_: IntegerArray | None = field(default=None, init=False)
 
     def fit(
-        self, 
-        X: np.ndarray
-        ) -> None:
+        self,
+        X: NumericArray,
+    ) -> None:
         """
         Fit the GMM clustering processor.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
         """
         self.processor.fit(X)
 
     def predict(
-        self, 
-        X: np.ndarray
-        ) -> ClusteringLabels:
+        self,
+        X: NumericArray,
+    ) -> ClusteringLabels:
         """
         Predict the clustering labels for new data.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:
@@ -77,15 +60,15 @@ class GMMClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=labels)
 
     def fit_predict(
-        self, 
-        X: np.ndarray
-        ) -> ClusteringLabels:
+        self,
+        X: NumericArray,
+    ) -> ClusteringLabels:
         """
         Fit the clustering processor and predict the clustering labels.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:

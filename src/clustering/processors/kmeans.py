@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import numpy as np
-from sklearn.cluster import KMeans  # type: ignore[import-untyped]
-
+from ..types import NumericArray
 from ..processor import ClusteringProcessor
 from ..result import ClusteringLabels
+from .protocols.kmeans import KMeansLike
 
 
 @dataclass
@@ -16,36 +15,36 @@ class KMeansClusteringProcessor(ClusteringProcessor):
 
     Attributes:
     ----------
-    processor: KMeans
-        The underlying sklearn KMeans estimator.
+    processor: KMeansLike
+        The underlying sklearn KMeans estimator (structural type).
     """
 
-    processor: KMeans
+    processor: KMeansLike
 
     def fit(
         self,
-        X: np.ndarray,
+        X: NumericArray,
     ) -> None:
         """
         Fit the KMeans clustering processor.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
         """
-        self.processor.fit(X)  # type: ignore[union-attr]
+        self.processor.fit(X)
 
     def predict(
         self,
-        X: np.ndarray,
+        X: NumericArray,
     ) -> ClusteringLabels:
         """
         Predict the clustering labels for new data.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:
@@ -53,18 +52,18 @@ class KMeansClusteringProcessor(ClusteringProcessor):
         ClusteringLabels:
             The clustering labels.
         """
-        return ClusteringLabels(labels=self.processor.predict(X))  # type: ignore[arg-type]
+        return ClusteringLabels(labels=self.processor.predict(X))
 
     def fit_predict(
         self,
-        X: np.ndarray,
+        X: NumericArray,
     ) -> ClusteringLabels:
         """
         Fit the clustering processor and predict the clustering labels.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:
@@ -72,7 +71,7 @@ class KMeansClusteringProcessor(ClusteringProcessor):
         ClusteringLabels:
             The clustering labels.
         """
-        return ClusteringLabels(labels=self.processor.fit_predict(X))  # type: ignore[arg-type]
+        return ClusteringLabels(labels=self.processor.fit_predict(X))
 
     @property
     def labels(self) -> ClusteringLabels:
@@ -89,7 +88,7 @@ class KMeansClusteringProcessor(ClusteringProcessor):
             raise ValueError(
                 "Processor is not fitted yet. Call fit() or fit_predict() first."
             )
-        return ClusteringLabels(labels=labels)  # type: ignore[arg-type]
+        return ClusteringLabels(labels=labels)
 
     @property
     def is_precomputed_input_required(self) -> bool:

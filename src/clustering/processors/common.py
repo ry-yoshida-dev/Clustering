@@ -1,33 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol, cast
 
-import numpy as np
-from numpy.typing import ArrayLike
 from sklearn.cluster import (  # type: ignore[import-untyped]
     AgglomerativeClustering,
     DBSCAN,
     HDBSCAN,
 )
 
+from ..types import NumericArray
 from ..processor import ClusteringProcessor
 from ..result import ClusteringLabels
-
-
-class _SklearnClusteringLike(Protocol):
-    """
-    Structural type for sklearn cluster estimators used here.
-
-    Sklearn type stubs are incomplete for these estimators; this protocol gives
-    stable signatures for fit, fit_predict, and labels_ without per-class casts.
-    """
-
-    labels_: object | None
-
-    def fit(self, X: np.ndarray, y: np.ndarray | None = None) -> object: ...
-
-    def fit_predict(self, X: np.ndarray, y: np.ndarray | None = None) -> np.ndarray: ...
+from .protocols.common import CommonClusteringLike
 
 
 @dataclass
@@ -40,36 +24,36 @@ class CommonClusteringProcessor(ClusteringProcessor):
 
     Attributes:
     ----------
-    processor: _SklearnClusteringLike
+    processor: CommonClusteringLike
         The underlying sklearn estimator (structural type).
     """
 
-    processor: _SklearnClusteringLike
+    processor: CommonClusteringLike
 
     def fit(
         self,
-        X: np.ndarray,
+        X: NumericArray,
     ) -> None:
         """
         Fit the clustering processor.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
         """
         self.processor.fit(X)
 
     def predict(
         self,
-        X: np.ndarray,
+        X: NumericArray,
     ) -> ClusteringLabels:
         """
         Predict is not supported for this processor type.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             Unused; present for the ClusteringProcessor interface.
 
         Raises:
@@ -81,14 +65,14 @@ class CommonClusteringProcessor(ClusteringProcessor):
 
     def fit_predict(
         self,
-        X: np.ndarray,
+        X: NumericArray,
     ) -> ClusteringLabels:
         """
         Fit the clustering processor and predict the clustering labels.
 
         Parameters:
         ----------
-        X: np.ndarray
+        X: NumericArray
             The input data.
 
         Returns:
@@ -96,7 +80,7 @@ class CommonClusteringProcessor(ClusteringProcessor):
         ClusteringLabels:
             The clustering labels.
         """
-        return ClusteringLabels(labels=cast(ArrayLike, self.processor.fit_predict(X)))
+        return ClusteringLabels(labels=self.processor.fit_predict(X))
 
     @property
     def labels(self) -> ClusteringLabels:
@@ -113,7 +97,7 @@ class CommonClusteringProcessor(ClusteringProcessor):
             raise ValueError(
                 "Processor is not fitted yet. Call fit() or fit_predict() first."
             )
-        return ClusteringLabels(labels=cast(ArrayLike, labels))
+        return ClusteringLabels(labels=labels)
 
     @property
     def is_precomputed_input_required(self) -> bool:
