@@ -31,6 +31,22 @@ class ConstrainedAgglomerativeClustering:
     compute cluster centroids and variances, which does not fit a precomputed
     distance matrix. Callers must not pass AgglomerativeLinkage.WARD.
 
+    Merges are located with the nearest-neighbor-chain algorithm (Murtagh
+    1984) rather than by rescanning the full active-by-active distance
+    submatrix on every merge. Single, complete, and average linkage all
+    satisfy the Lance-Williams reducibility property, so the chain always
+    closes on a reciprocal-nearest-neighbor pair and the resulting merge
+    tree matches the one a full global-argmin search would build. The chain
+    runs to completion first, without applying the distance threshold; the
+    order in which it discovers reciprocal pairs is not guaranteed to be
+    sorted by height (only the finished merge tree is), so every merge is
+    recorded and only applied to the union-find structure afterward, sorted
+    by height and cut at distance_threshold. Forbidden pairs are excluded
+    from every neighbor lookup rather than folded into the distances, so
+    eligibility stays exact instead of relying on distance inflation. This
+    brings the running time down from O(n^3) to O(n^2) without changing the
+    result.
+
     The linkage criterion is resolved to a merge-row function once, in
     __post_init__, so the merge hot loop never branches on the linkage enum.
 
@@ -109,36 +125,60 @@ class ConstrainedAgglomerativeClustering:
         inputs = CannotLinkClusteringInputs.validate(X, negative_matrix)
         n = inputs.X.shape[0]
         dist = inputs.X.astype(np.float64, copy=True)
+        np.fill_diagonal(dist, np.inf)
         forbidden = inputs.negative_matrix.copy()
         size = np.ones(n, dtype=np.int64)
         active = np.ones(n, dtype=bool)
         root = np.arange(n, dtype=np.int64)
 
+        candidates = set(range(n))
+        chain: list[int] = []
+        merges: list[tuple[float, int, int]] = []
+
         while True:
-            active_count = int(np.count_nonzero(active))
-            if active_count <= 1:
+            if not chain:
+                if not candidates:
+                    break
+                chain.append(next(iter(candidates)))
+
+            current = chain[-1]
+            neighbor, distance = self._nearest_eligible(current, dist, forbidden, active)
+
+            if neighbor is None:
+                candidates.discard(current)
+                del chain[-1]
+                continue
+
+            if len(chain) >= 2 and neighbor == chain[-2]:
+                a, b = (current, neighbor) if current < neighbor else (neighbor, current)
+                self._merge(a, b, dist, forbidden, size, active)
+                merges.append((distance, a, b))
+                candidates.discard(b)
+                del chain[-2:]
+                continue
+
+            chain.append(neighbor)
+
+        for height, a, b in sorted(merges, key=lambda merge: merge[0]):
+            if height > self.distance_threshold:
                 break
-
-            reps = np.flatnonzero(active)
-            sub_dist = dist[np.ix_(reps, reps)].copy()
-            sub_forbidden = forbidden[np.ix_(reps, reps)]
-            np.fill_diagonal(sub_dist, np.inf)
-            eligible = np.where(sub_forbidden, np.inf, sub_dist)
-
-            if not np.any(np.isfinite(eligible)):
-                break
-
-            flat_index = int(np.argmin(eligible))
-            local_i, local_j = np.unravel_index(flat_index, eligible.shape)
-            best_distance = float(eligible[local_i, local_j])
-            if best_distance > self.distance_threshold:
-                break
-
-            i, j = int(reps[local_i]), int(reps[local_j])
-            a, b = (i, j) if i < j else (j, i)
-            self._merge(a, b, dist, forbidden, size, active, root)
+            root[b] = a
 
         return self._labels_from_roots(root, n)
+
+    @staticmethod
+    def _nearest_eligible(
+        current: int,
+        dist: NumericArray,
+        forbidden: NegativeMatrix,
+        active: NegativeMatrix,
+    ) -> tuple[int | None, float]:
+        eligible_row = np.where(active & ~forbidden[current], dist[current], np.inf)
+        neighbor = int(np.argmin(eligible_row))
+        distance = float(eligible_row[neighbor])
+        if not np.isfinite(distance):
+            return None, np.inf
+        return neighbor, distance
 
     def _merge(
         self,
@@ -148,18 +188,17 @@ class ConstrainedAgglomerativeClustering:
         forbidden: NegativeMatrix,
         size: IntegerArray,
         active: NegativeMatrix,
-        root: IntegerArray,
     ) -> None:
         new_row = self._merge_row(dist[a], dist[b], int(size[a]), int(size[b]))
 
         dist[a, :] = new_row
         dist[:, a] = new_row
+        dist[a, a] = np.inf
         forbidden_row = forbidden[a] | forbidden[b]
         forbidden[a, :] = forbidden_row
         forbidden[:, a] = forbidden_row
         size[a] += size[b]
         active[b] = False
-        root[b] = a
 
     @staticmethod
     def _labels_from_roots(root: IntegerArray, n: int) -> IntegerArray:
