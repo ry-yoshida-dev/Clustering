@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Literal
 
 from sklearn.cluster import HDBSCAN
 
@@ -31,7 +31,7 @@ class HDBSCANParameters(ClusteringParameter):
     cluster_selection_epsilon: float = 0.0
     max_cluster_size: int | None = None
     metric: HDBSCANMetric = HDBSCANMetric.EUCLIDEAN
-    metric_params: dict[str, Any] | None = None
+    metric_params: dict[str, object] | None = None
     alpha: float = 1.0
     algorithm: HDBSCANAlgorithm = HDBSCANAlgorithm.AUTO
     leaf_size: int = 40
