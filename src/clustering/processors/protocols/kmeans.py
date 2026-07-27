@@ -15,7 +15,8 @@ class KMeansLike(Protocol):
     signatures for fit, predict, fit_predict, and labels_ without per-call ignores.
     """
 
-    labels_: IntegerArray | None
+    @property
+    def labels_(self) -> IntegerArray | None: ...
 
     def fit(self, X: NumericArray, y: IntegerArray | None = None) -> object: ...
 

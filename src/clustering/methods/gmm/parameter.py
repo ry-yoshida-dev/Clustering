@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sklearn.mixture import GaussianMixture # type: ignore
+from sklearn.mixture import GaussianMixture
 
 from .covaiance_type import GMMCovarianceType
 from ...method import ClusteringMethod

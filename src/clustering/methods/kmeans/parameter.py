@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from sklearn.cluster import KMeans # type: ignore
+
+from sklearn.cluster import KMeans
 
 from .initialization import KMeansInitialization
 from ...method import ClusteringMethod
@@ -52,7 +53,7 @@ class KMeansParameters(ClusteringParameter):
             tol=self.tol,
             verbose=self.verbose,
             random_state=self.random_state,
-            )
+        )
         return KMeansClusteringProcessor(
             method=ClusteringMethod.KMEANS,
             processor=kmeans_processor,

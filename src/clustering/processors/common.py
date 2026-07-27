@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from sklearn.cluster import (  # type: ignore[import-untyped]
+from sklearn.cluster import (
     AgglomerativeClustering,
     DBSCAN,
     HDBSCAN,
@@ -109,9 +109,9 @@ class CommonClusteringProcessor(ClusteringProcessor):
         bool:
             True when the metric is precomputed (AgglomerativeClustering, DBSCAN, or HDBSCAN).
         """
-        from ..methods import AgglomerativeMetric
-        from ..methods import DBSCANMetric
-        from ..methods import HDBSCANMetric
+        from ..methods.agglomerative.metric import AgglomerativeMetric
+        from ..methods.dbscan.metric import DBSCANMetric
+        from ..methods.hdbscan.metric import HDBSCANMetric
 
         if isinstance(self.processor, AgglomerativeClustering):
             return AgglomerativeMetric(self.processor.metric) == AgglomerativeMetric.PRECOMPUTED

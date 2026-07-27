@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sklearn.cluster import DBSCAN # type: ignore
+from sklearn.cluster import DBSCAN
 
 from .metric import DBSCANMetric
 from .algorithm import DBSCANAlgorithm

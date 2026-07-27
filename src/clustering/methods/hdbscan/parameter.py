@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
-from sklearn.cluster import HDBSCAN  # type: ignore[import-untyped]
+from sklearn.cluster import HDBSCAN
 
 from .algorithm import HDBSCANAlgorithm
 from .cluster_selection_method import HDBSCANClusterSelectionMethod
@@ -61,8 +61,7 @@ class HDBSCANParameters(ClusteringParameter):
             raise ValueError("alpha must be greater than 0")
 
     def build_processor(self) -> ClusteringProcessor:
-        store = None if self.store_centers is None else self.store_centers.value
-        hdbscan_processor = HDBSCAN(
+        hdbscan_processor: HDBSCAN = HDBSCAN(
             min_cluster_size=self.min_cluster_size,
             min_samples=self.min_samples,
             cluster_selection_epsilon=self.cluster_selection_epsilon,
@@ -75,12 +74,14 @@ class HDBSCANParameters(ClusteringParameter):
             n_jobs=self.n_jobs,
             cluster_selection_method=self.cluster_selection_method.value,
             allow_single_cluster=self.allow_single_cluster,
-            store_centers=store,
-            copy=cast(Any, self.copy),
+            store_centers=(
+                None if self.store_centers is None else self.store_centers.value
+            ),
+            copy=self.copy,
         )
         return CommonClusteringProcessor(
             method=ClusteringMethod.HDBSCAN,
-            processor=cast(Any, hdbscan_processor),
+            processor=hdbscan_processor,
         )
 
 

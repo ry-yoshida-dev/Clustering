@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Any, Iterator, cast
+from typing import cast
 
 import numpy as np
 from numpy.typing import ArrayLike, DTypeLike, NDArray
+from typing_extensions import override
 
 from .types import BoolArray
 
@@ -35,6 +37,7 @@ class ClusteringLabels:
         object.__setattr__(self, "noise_label", noise_label)
         object.__setattr__(self, "labels", arr.copy())
 
+    @override
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, ClusteringLabels):
             return NotImplemented
@@ -87,7 +90,7 @@ class ClusteringLabels:
         list[int]
             The set of labels.
         """
-        return np.unique(self.labels).tolist()
+        return cast(list[int], np.unique(self.labels).tolist())
 
     @property
     def num_noise(self) -> int:
@@ -99,7 +102,7 @@ class ClusteringLabels:
         int
             The number of noise labels.
         """
-        return int(np.sum(self.labels == self.noise_label))
+        return int(np.count_nonzero(np.equal(self.labels, self.noise_label)))
 
     @property
     def num_not_noise_labels(self) -> int:
@@ -111,7 +114,7 @@ class ClusteringLabels:
         int
             The number of not noise labels.
         """
-        return int(np.sum(self.labels != self.noise_label))
+        return int(np.count_nonzero(np.not_equal(self.labels, self.noise_label)))
 
     @property
     def expanded_labels(self) -> list[int]:
@@ -131,7 +134,7 @@ class ClusteringLabels:
             new_labels[noise_mask] = np.arange(
                 max_label + 1, max_label + 1 + self.num_noise, dtype=np.int64
             )
-        return new_labels.tolist()
+        return cast(list[int], new_labels.tolist())
 
     def get_cluster_counts(
         self,
@@ -152,9 +155,11 @@ class ClusteringLabels:
             The keys are the labels and the values are the counts.
         """
         unique, counts_arr = np.unique(self.labels, return_counts=True)
+        unique_list = cast(list[int], unique.tolist())
+        counts_list = cast(list[int], counts_arr.tolist())
         sorted_counts = sorted(
-            ((int(u), int(c)) for u, c in zip(unique, counts_arr)),
-            key=lambda x: x[1],
+            zip(unique_list, counts_list),
+            key=lambda pair: pair[1],
             reverse=True,
         )
         if not include_noise:
@@ -178,7 +183,7 @@ class ClusteringLabels:
         is_empty_allowed: bool
             Whether to allow empty indices.
         """
-        indices = np.where(self.labels == label)[0]
+        indices = np.where(np.equal(self.labels, label))[0]
         if len(indices) == 0 and not is_empty_allowed:
             raise ValueError(
                 f"label: {label} not found. If you want to allow empty indices, set is_empty_allowed to True."
@@ -200,7 +205,8 @@ class ClusteringLabels:
         max_index = max(indices)
         if max_index >= len(self):
             raise ValueError(f"index: {max_index} is out of range")
-        return [int(self.labels[i]) for i in indices]
+        labels_list = cast(list[int], self.labels.tolist())
+        return [labels_list[i] for i in indices]
 
     def get_mask(
         self,
@@ -219,7 +225,7 @@ class ClusteringLabels:
         BoolArray
             The mask of the label with shape (n,).
         """
-        return self.labels == label
+        return np.equal(self.labels, label)
 
     def get_major_labels(
         self,
@@ -237,16 +243,16 @@ class ClusteringLabels:
         major_labels = [label for label, count in counts.items() if count >= min_count]
         return major_labels
 
-    def __array__(self, dtype: DTypeLike | None = None) -> NDArray[Any]:
+    def __array__(self, dtype: DTypeLike | None = None) -> NDArray[np.generic]:
         if dtype is None:
             return self.labels
         return self.labels.astype(dtype, copy=False)
 
     def __iter__(self) -> Iterator[int]:
-        return (int(x) for x in self.labels)
+        return iter(cast(list[int], self.labels.tolist()))
 
     def __len__(self) -> int:
-        return int(self.labels.shape[0])
+        return len(self.labels)
 
     def __getitem__(
         self,
@@ -265,4 +271,4 @@ class ClusteringLabels:
         int
             The label at the given index.
         """
-        return int(self.labels[index])
+        return cast(list[int], self.labels.tolist())[index]

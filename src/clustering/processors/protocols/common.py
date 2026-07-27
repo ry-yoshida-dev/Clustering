@@ -15,7 +15,8 @@ class CommonClusteringLike(Protocol):
     HDBSCAN; this protocol gives stable signatures without per-class casts.
     """
 
-    labels_: IntegerArray | None
+    @property
+    def labels_(self) -> IntegerArray | None: ...
 
     def fit(self, X: NumericArray, y: IntegerArray | None = None) -> object: ...
 

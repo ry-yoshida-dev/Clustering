@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sklearn.cluster import AgglomerativeClustering # type: ignore
+from sklearn.cluster import AgglomerativeClustering
 
 from .linkage import AgglomerativeLinkage
 from .metric import AgglomerativeMetric
@@ -46,7 +46,7 @@ class AgglomerativeClusteringParameters(ClusteringParameter):
 
     def build_processor(self) -> ClusteringProcessor:
         agglomerative_processor = AgglomerativeClustering(
-            n_clusters=self.n_clusters, # type: ignore
+            n_clusters=self.n_clusters,
             metric=self.metric.value,
             distance_threshold=self.distance_threshold,
             linkage=self.linkage.value
