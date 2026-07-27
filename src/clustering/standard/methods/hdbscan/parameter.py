@@ -7,7 +7,7 @@ from .algorithm import HDBSCANAlgorithm
 from .cluster_selection_method import HDBSCANClusterSelectionMethod
 from .metric import HDBSCANMetric
 from .store_centers import HDBSCANStoreCenters
-from ...method import ClusteringMethod
+from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import CommonClusteringProcessor

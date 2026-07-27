@@ -3,9 +3,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from .types import NumericArray
-from .method import ClusteringMethod
-from .result import ClusteringLabels
+from ..types import NumericArray
+from ..method import ClusteringMethod
+from ..result import ClusteringLabels
 
 
 @dataclass

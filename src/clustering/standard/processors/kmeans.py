@@ -1,35 +1,32 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
-from ..types import IntegerArray, NumericArray
+from ...types import NumericArray
 from ..processor import ClusteringProcessor
-from ..result import ClusteringLabels
-from .protocols.gmm import GaussianMixtureLike
+from ...result import ClusteringLabels
+from .protocols.kmeans import KMeansLike
 
 
 @dataclass
-class GMMClusteringProcessor(ClusteringProcessor):
+class KMeansClusteringProcessor(ClusteringProcessor):
     """
-    Wraps sklearn GaussianMixture for the clustering pipeline.
+    Wraps sklearn KMeans for the clustering pipeline.
 
     Attributes:
     ----------
-    processor: GaussianMixtureLike
-        The underlying sklearn GaussianMixture estimator (structural type).
-    labels_: IntegerArray | None
-        Cached labels from the last predict or fit_predict, if any.
+    processor: KMeansLike
+        The underlying sklearn KMeans estimator (structural type).
     """
 
-    processor: GaussianMixtureLike
-    labels_: IntegerArray | None = field(default=None, init=False)
+    processor: KMeansLike
 
     def fit(
         self,
         X: NumericArray,
     ) -> None:
         """
-        Fit the GMM clustering processor.
+        Fit the KMeans clustering processor.
 
         Parameters:
         ----------
@@ -55,9 +52,7 @@ class GMMClusteringProcessor(ClusteringProcessor):
         ClusteringLabels:
             The clustering labels.
         """
-        labels = self.processor.predict(X)
-        self.labels_ = labels
-        return ClusteringLabels(labels=labels)
+        return ClusteringLabels(labels=self.processor.predict(X))
 
     def fit_predict(
         self,
@@ -76,9 +71,7 @@ class GMMClusteringProcessor(ClusteringProcessor):
         ClusteringLabels:
             The clustering labels.
         """
-        labels = self.processor.fit_predict(X)
-        self.labels_ = labels
-        return ClusteringLabels(labels=labels)
+        return ClusteringLabels(labels=self.processor.fit_predict(X))
 
     @property
     def labels(self) -> ClusteringLabels:
@@ -90,11 +83,12 @@ class GMMClusteringProcessor(ClusteringProcessor):
         ClusteringLabels:
             The clustering labels.
         """
-        if self.labels_ is None:
+        labels = self.processor.labels_
+        if labels is None:
             raise ValueError(
                 "Processor is not fitted yet. Call fit() or fit_predict() first."
             )
-        return ClusteringLabels(labels=self.labels_)
+        return ClusteringLabels(labels=labels)
 
     @property
     def is_precomputed_input_required(self) -> bool:
@@ -104,6 +98,6 @@ class GMMClusteringProcessor(ClusteringProcessor):
         Returns:
         ----------
         bool:
-            False because GMM does not require a precomputed distance matrix.
+            False because KMeans uses feature vectors, not a precomputed distance matrix.
         """
         return False

@@ -8,9 +8,9 @@ from sklearn.cluster import (
     HDBSCAN,
 )
 
-from ..types import NumericArray
+from ...types import NumericArray
 from ..processor import ClusteringProcessor
-from ..result import ClusteringLabels
+from ...result import ClusteringLabels
 from .protocols.common import CommonClusteringLike
 
 

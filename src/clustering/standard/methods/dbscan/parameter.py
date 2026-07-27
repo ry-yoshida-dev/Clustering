@@ -3,7 +3,7 @@ from sklearn.cluster import DBSCAN
 
 from .metric import DBSCANMetric
 from .algorithm import DBSCANAlgorithm
-from ...method import ClusteringMethod
+from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import CommonClusteringProcessor

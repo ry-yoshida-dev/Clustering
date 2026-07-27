@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from ...types import IntegerArray, NumericArray
+from ....types import IntegerArray, NumericArray
 
 
 class CommonClusteringLike(Protocol):

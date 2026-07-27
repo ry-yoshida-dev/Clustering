@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from clustering.methods import HDBSCANParameters
+from clustering.standard.methods import HDBSCANParameters
 
 from tests.helpers import two_blobs
 

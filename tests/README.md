@@ -2,7 +2,7 @@
 
 ## Overview
 
-Unit tests for the `clustering` package: label utilities, parameter validation, and end-to-end processor behavior for all supported clustering methods.
+Unit tests for the `clustering` package: label utilities, parameter validation, and end-to-end processor behavior for all supported clustering methods, both unconstrained (`clustering.standard`) and cannot-link constrained (`clustering.cannot_link`).
 
 ## Components
 
@@ -15,6 +15,7 @@ Unit tests for the `clustering` package: label utilities, parameter validation, 
 | [`test_dbscan_processor.py`](test_dbscan_processor.py) | Tests for DBSCAN parameters and processor API. |
 | [`test_hdbscan_processor.py`](test_hdbscan_processor.py) | Tests for HDBSCAN parameters and processor API. |
 | [`test_agglomerative_processor.py`](test_agglomerative_processor.py) | Tests for agglomerative parameters and processor API. |
+| [`test_cannot_link_agglomerative_processor.py`](test_cannot_link_agglomerative_processor.py) | Tests for cannot-link constrained agglomerative parameters and processor API. |
 
 ## Examples
 

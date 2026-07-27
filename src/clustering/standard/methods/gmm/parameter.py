@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from sklearn.mixture import GaussianMixture
 
 from .covaiance_type import GMMCovarianceType
-from ...method import ClusteringMethod
+from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import GMMClusteringProcessor

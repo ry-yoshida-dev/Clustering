@@ -4,7 +4,7 @@ import unittest
 
 import numpy as np
 
-from clustering.methods import DBSCANMetric, DBSCANParameters
+from clustering.standard.methods import DBSCANMetric, DBSCANParameters
 
 from tests.helpers import two_blobs
 

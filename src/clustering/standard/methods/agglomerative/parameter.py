@@ -3,7 +3,7 @@ from sklearn.cluster import AgglomerativeClustering
 
 from .linkage import AgglomerativeLinkage
 from .metric import AgglomerativeMetric
-from ...method import ClusteringMethod
+from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import CommonClusteringProcessor

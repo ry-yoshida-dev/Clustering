@@ -1,10 +1,10 @@
 
 
-from .processor import ClusteringProcessor
-from .parameter import ClusteringParameter
 from .result import ClusteringLabels
 from .method import ClusteringMethod
-from .methods import (
+from .standard import (
+    ClusteringProcessor,
+    ClusteringParameter,
     AgglomerativeClusteringParameters,
     AgglomerativeLinkage,
     AgglomerativeMetric,
@@ -12,6 +12,11 @@ from .methods import (
     GMMCovarianceType,
     KMeansParameters,
     KMeansInitialization,
+    )
+from .cannot_link import (
+    CannotLinkClusteringParameter,
+    CannotLinkClusteringProcessor,
+    CannotLinkAgglomerativeClusteringParameters,
     )
 
 __all__ = [
@@ -26,4 +31,7 @@ __all__ = [
     "GMMCovarianceType",
     "KMeansParameters",
     "KMeansInitialization",
+    "CannotLinkClusteringParameter",
+    "CannotLinkClusteringProcessor",
+    "CannotLinkAgglomerativeClusteringParameters",
     ]
