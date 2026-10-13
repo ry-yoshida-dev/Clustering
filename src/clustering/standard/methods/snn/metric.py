@@ -3,7 +3,7 @@ from enum import Enum
 
 class SNNMetric(Enum):
     """
-    SNNMetric is the metric used to find k-nearest neighbors for shared nearest neighbor clustering.
+    Distance metric used to find k-nearest neighbors for shared nearest neighbor clustering.
 
     NOTE
     sklearn.neighbors.NearestNeighbors supports additional metrics.

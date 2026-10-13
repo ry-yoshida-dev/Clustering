@@ -5,7 +5,7 @@ from typing import ClassVar
 
 import numpy as np
 
-from ...types import BoolArray, IntegerArray
+from ....types import BoolArray, IntegerArray
 
 
 @dataclass(frozen=True)

@@ -6,10 +6,10 @@ from typing import Self
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 
-from ...types import IntegerArray, NumericArray
+from ....types import IntegerArray, NumericArray
 from .core_point_labeling import CorePointLabeling
+from .metric import SNNMetric
 from .shared_neighbor_graph import SharedNeighborGraph
-from .snn_metric import SNNMetric
 
 
 @dataclass

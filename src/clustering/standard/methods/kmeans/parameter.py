@@ -4,15 +4,15 @@ from typing import override
 from sklearn.cluster import KMeans
 
 from ....method import ClusteringMethod
-from ...parameter import ClusteringParameter
+from ...parameter import ClusteringParameters
 from ...processors import InductiveClusteringProcessor
 from .initialization import KMeansInitialization
 
 
-@dataclass
-class KMeansParameters(ClusteringParameter):
+@dataclass(frozen=True)
+class KMeansParameters(ClusteringParameters):
     """
-    KMeansParameters is the parameters for the KMeans clustering algorithm.
+    Parameters for scikit-learn's KMeans clustering.
 
     Attributes
     ----------

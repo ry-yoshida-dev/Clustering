@@ -3,17 +3,16 @@ from typing import override
 
 from ....linkage import AgglomerativeLinkage
 from ....method import ClusteringMethod
-from ...algorithms.agglomerative import ConstrainedAgglomerativeClustering
-from ...parameter import CannotLinkClusteringParameter
+from ...parameter import CannotLinkClusteringParameters
 from ...processor import CannotLinkClusteringProcessor
-from ...processors import CannotLinkAgglomerativeProcessor
+from .estimator import ConstrainedAgglomerativeClustering
+from .processor import CannotLinkAgglomerativeProcessor
 
 
-@dataclass
-class CannotLinkAgglomerativeClusteringParameters(CannotLinkClusteringParameter):
+@dataclass(frozen=True)
+class CannotLinkAgglomerativeClusteringParameters(CannotLinkClusteringParameters):
     """
-    CannotLinkAgglomerativeClusteringParameters is the parameters for cannot-link
-    constrained agglomerative clustering.
+    Parameters for cannot-link constrained agglomerative clustering.
 
     n_clusters is intentionally not offered: reaching an exact cluster count can
     force a merge that violates a cannot-link constraint, so only the

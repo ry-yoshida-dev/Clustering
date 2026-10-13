@@ -8,7 +8,7 @@ class HDBSCANClusterSelectionMethod(Enum):
     Attributes
     ----------
     EOM
-        Excess of Mass — default, often preferred for varied density.
+        Excess of Mass; the default, often preferred for varied density.
     LEAF
         Use leaves of the condensed tree.
     """

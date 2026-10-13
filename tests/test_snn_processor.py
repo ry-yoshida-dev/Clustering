@@ -9,12 +9,13 @@ from sklearn.exceptions import NotFittedError
 from sklearn.neighbors import NearestNeighbors
 
 from clustering import ClusteringMethod
-from clustering.standard.algorithms import (
+from clustering.standard.methods.snn import (
     CorePointLabeling,
     SharedNearestNeighborClustering,
     SharedNeighborGraph,
+    SNNMetric,
+    SNNParameters,
 )
-from clustering.standard.methods import SNNMetric, SNNParameters
 from tests.helpers import two_blobs
 
 

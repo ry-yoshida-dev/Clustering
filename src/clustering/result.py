@@ -271,9 +271,13 @@ class ClusteringLabels:
     def __array__(
         self, dtype: DTypeLike | None = None, copy: bool | None = None
     ) -> NDArray[np.generic]:
-        if dtype is None:
+        if dtype is None or np.dtype(dtype) == self.labels.dtype:
             return self.labels.copy() if copy else self.labels
-        return self.labels.astype(dtype, copy=bool(copy))
+        if copy is False:
+            raise ValueError(
+                f"cannot convert labels to {np.dtype(dtype)} without copying"
+            )
+        return self.labels.astype(dtype)
 
     def __iter__(self) -> Iterator[int]:
         return iter(cast(list[int], self.labels.tolist()))

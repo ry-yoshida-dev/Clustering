@@ -1,6 +1,6 @@
 from .cannot_link import (
     CannotLinkAgglomerativeClusteringParameters,
-    CannotLinkClusteringParameter,
+    CannotLinkClusteringParameters,
     CannotLinkClusteringProcessor,
 )
 from .linkage import AgglomerativeLinkage
@@ -9,7 +9,7 @@ from .result import ClusteringLabels
 from .standard import (
     AgglomerativeClusteringParameters,
     AgglomerativeMetric,
-    ClusteringParameter,
+    ClusteringParameters,
     ClusteringProcessor,
     DBSCANAlgorithm,
     DBSCANMetric,
@@ -32,11 +32,11 @@ __all__ = [
     "AgglomerativeLinkage",
     "AgglomerativeMetric",
     "CannotLinkAgglomerativeClusteringParameters",
-    "CannotLinkClusteringParameter",
+    "CannotLinkClusteringParameters",
     "CannotLinkClusteringProcessor",
     "ClusteringLabels",
     "ClusteringMethod",
-    "ClusteringParameter",
+    "ClusteringParameters",
     "ClusteringProcessor",
     "DBSCANAlgorithm",
     "DBSCANMetric",

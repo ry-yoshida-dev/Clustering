@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 import unittest
 
 import numpy as np
@@ -35,6 +36,20 @@ class TestAgglomerativeProcessor(unittest.TestCase):
                 metric=AgglomerativeMetric.COSINE,
                 linkage=AgglomerativeLinkage.WARD,
             )
+
+    def test_single_stopping_criterion_needs_no_explicit_none(self) -> None:
+        by_count = AgglomerativeClusteringParameters(n_clusters=2)
+        by_distance = AgglomerativeClusteringParameters(distance_threshold=0.5)
+        self.assertIsNone(by_count.distance_threshold)
+        self.assertIsNone(by_distance.n_clusters)
+        with self.assertRaises(ValueError):
+            _ = AgglomerativeClusteringParameters()
+
+    def test_parameters_are_frozen(self) -> None:
+        parameters = AgglomerativeClusteringParameters(n_clusters=2)
+        field_name = "n_clusters"
+        with self.assertRaises(dataclasses.FrozenInstanceError):
+            setattr(parameters, field_name, -1)
 
     def test_fit_predict_with_n_clusters(self) -> None:
         x = two_blobs()

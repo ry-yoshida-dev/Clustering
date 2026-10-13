@@ -3,7 +3,7 @@ from enum import Enum
 
 class ClusteringMethod(Enum):
     """
-    ClusteringMethod is the method of the clustering processor.
+    Clustering method implemented by a processor.
 
     Attributes
     ----------

@@ -5,14 +5,61 @@ from typing import cast
 
 import numpy as np
 from scipy.spatial.distance import cdist
+from sklearn.exceptions import NotFittedError
 
 from clustering import AgglomerativeLinkage, CannotLinkAgglomerativeClusteringParameters
 from clustering.cannot_link.types import NegativeMatrix
+from clustering.types import IntegerArray, NumericArray
 
 
 def _two_close_pairs() -> np.ndarray:
     points = np.array([[0.0, 0.0], [0.1, 0.0], [10.0, 0.0], [10.1, 0.0]])
     return cdist(points, points)
+
+
+def _greedy_reference_labels(
+    distance_matrix: NumericArray,
+    negative_matrix: NegativeMatrix,
+    linkage: AgglomerativeLinkage,
+    distance_threshold: float,
+) -> IntegerArray:
+    clusters = [[point] for point in range(len(distance_matrix))]
+
+    def cluster_distance(first: list[int], second: list[int]) -> float:
+        if negative_matrix[np.ix_(first, second)].any():
+            return float("inf")
+        block = distance_matrix[np.ix_(first, second)]
+        match linkage:
+            case AgglomerativeLinkage.SINGLE:
+                return float(block.min())
+            case AgglomerativeLinkage.COMPLETE:
+                return float(block.max())
+            case AgglomerativeLinkage.AVERAGE:
+                return float(np.mean(block, dtype=np.float64))
+            case AgglomerativeLinkage.WARD:
+                raise ValueError("ward linkage is not supported")
+
+    while len(clusters) > 1:
+        best_distance, first_index, second_index = min(
+            (cluster_distance(clusters[i], clusters[j]), i, j)
+            for i in range(len(clusters))
+            for j in range(i + 1, len(clusters))
+        )
+        if best_distance > distance_threshold:
+            break
+        clusters[first_index].extend(clusters.pop(second_index))
+
+    labels = np.empty(len(distance_matrix), dtype=np.int64)
+    for label, members in enumerate(clusters):
+        labels[members] = label
+    return labels
+
+
+def _is_same_partition(first: IntegerArray, second: IntegerArray) -> bool:
+    first_labels = cast(list[int], first.tolist())
+    second_labels = cast(list[int], second.tolist())
+    pairs = set(zip(first_labels, second_labels, strict=True))
+    return len(pairs) == len(set(first_labels)) == len(set(second_labels))
 
 
 class TestCannotLinkAgglomerativeProcessor(unittest.TestCase):
@@ -131,6 +178,41 @@ class TestCannotLinkAgglomerativeProcessor(unittest.TestCase):
             distance_threshold=1.0
         ).build_processor()
         self.assertFalse(hasattr(proc, "predict"))
+
+    def test_matches_greedy_reference_on_random_inputs(self) -> None:
+        rng = np.random.default_rng(810)
+        supported_linkages = [
+            AgglomerativeLinkage.SINGLE,
+            AgglomerativeLinkage.COMPLETE,
+            AgglomerativeLinkage.AVERAGE,
+        ]
+        for trial in range(100):
+            n_points = int(rng.integers(3, 12))
+            points = rng.random((n_points, 2))
+            distance_matrix = cdist(points, points)
+            upper = np.triu(rng.random((n_points, n_points)) < 0.15, k=1)
+            negative_matrix = upper | upper.T
+            distance_threshold = float(rng.uniform(0.1, 0.8))
+            for linkage in supported_linkages:
+                with self.subTest(trial=trial, linkage=linkage):
+                    proc = CannotLinkAgglomerativeClusteringParameters(
+                        distance_threshold=distance_threshold, linkage=linkage
+                    ).build_processor()
+                    actual = proc.fit_predict(distance_matrix, negative_matrix)
+                    expected = _greedy_reference_labels(
+                        distance_matrix, negative_matrix, linkage, distance_threshold
+                    )
+                    self.assertTrue(_is_same_partition(actual.labels, expected))
+
+    def test_labels_cached_after_fit(self) -> None:
+        proc = CannotLinkAgglomerativeClusteringParameters(
+            distance_threshold=1.0
+        ).build_processor()
+        with self.assertRaises(NotFittedError):
+            _ = proc.labels
+        negative_matrix = np.zeros((4, 4), dtype=bool)
+        proc.fit(_two_close_pairs(), negative_matrix)
+        self.assertEqual(proc.labels.num_clusters(), 2)
 
     def test_is_precomputed_input_required(self) -> None:
         proc = CannotLinkAgglomerativeClusteringParameters(

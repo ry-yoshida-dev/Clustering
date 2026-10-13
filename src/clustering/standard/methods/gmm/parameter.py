@@ -4,15 +4,15 @@ from typing import override
 from sklearn.mixture import GaussianMixture
 
 from ....method import ClusteringMethod
-from ...parameter import ClusteringParameter
+from ...parameter import ClusteringParameters
 from ...processors import InductiveClusteringProcessor
 from .covariance_type import GMMCovarianceType
 
 
-@dataclass
-class GMMParameters(ClusteringParameter):
+@dataclass(frozen=True)
+class GMMParameters(ClusteringParameters):
     """
-    GMMParameters is the parameters for the GMM clustering algorithm.
+    Parameters for scikit-learn's GaussianMixture clustering.
 
     Attributes
     ----------

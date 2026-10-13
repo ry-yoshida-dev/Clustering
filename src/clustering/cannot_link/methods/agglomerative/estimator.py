@@ -5,10 +5,10 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from ...linkage import AgglomerativeLinkage
-from ...types import BoolArray, FloatArray, IntegerArray, NumericArray
-from ..inputs import CannotLinkClusteringInputs
-from ..types import NegativeMatrix
+from ....linkage import AgglomerativeLinkage
+from ....types import BoolArray, FloatArray, IntegerArray, NumericArray
+from ...inputs import CannotLinkClusteringInputs
+from ...types import NegativeMatrix
 
 type MergeRowFn = Callable[[NumericArray, NumericArray, int, int], NumericArray]
 
@@ -126,7 +126,7 @@ class ConstrainedAgglomerativeClustering:
     def _run(self, X: NumericArray, negative_matrix: NegativeMatrix) -> IntegerArray:
         inputs = CannotLinkClusteringInputs.validate(X, negative_matrix)
         n = len(inputs.X)
-        dist = inputs.X.astype(np.float64, copy=True)
+        dist = inputs.X.astype(np.float64, copy=False)
         np.fill_diagonal(dist, np.inf)
         forbidden = inputs.negative_matrix.copy()
         size = np.ones(n, dtype=np.int64)

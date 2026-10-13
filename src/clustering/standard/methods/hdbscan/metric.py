@@ -3,7 +3,7 @@ from enum import Enum
 
 class HDBSCANMetric(Enum):
     """
-    HDBSCANMetric is the metric for sklearn.cluster.HDBSCAN.
+    Distance metric for scikit-learn's HDBSCAN.
 
     NOTE
     HDBSCAN supports additional metrics via scipy/sklearn.

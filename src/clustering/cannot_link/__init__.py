@@ -1,9 +1,9 @@
 from .methods import CannotLinkAgglomerativeClusteringParameters
-from .parameter import CannotLinkClusteringParameter
+from .parameter import CannotLinkClusteringParameters
 from .processor import CannotLinkClusteringProcessor
 
 __all__ = [
     "CannotLinkAgglomerativeClusteringParameters",
-    "CannotLinkClusteringParameter",
+    "CannotLinkClusteringParameters",
     "CannotLinkClusteringProcessor",
 ]

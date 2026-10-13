@@ -64,3 +64,7 @@ uv run pytest
 ```
 
 The same checks run in CI on every push to `main` and every pull request.
+
+## License
+
+Released under the [MIT License](LICENSE).

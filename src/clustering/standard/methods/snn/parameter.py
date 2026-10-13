@@ -2,15 +2,16 @@ from dataclasses import dataclass
 from typing import override
 
 from ....method import ClusteringMethod
-from ...algorithms import SharedNearestNeighborClustering, SNNMetric
-from ...parameter import ClusteringParameter
+from ...parameter import ClusteringParameters
 from ...processors import TransductiveClusteringProcessor
+from .estimator import SharedNearestNeighborClustering
+from .metric import SNNMetric
 
 
-@dataclass
-class SNNParameters(ClusteringParameter):
+@dataclass(frozen=True)
+class SNNParameters(ClusteringParameters):
     """
-    SNNParameters is the parameters for density-based shared nearest neighbor clustering.
+    Parameters for density-based shared nearest neighbor clustering.
 
     Attributes
     ----------

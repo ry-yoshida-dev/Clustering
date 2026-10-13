@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from .processor import ClusteringProcessor
 
 
-class ClusteringParameter(ABC):
+class ClusteringParameters(ABC):
     """
     Base class for clustering parameters that build a processor.
     """

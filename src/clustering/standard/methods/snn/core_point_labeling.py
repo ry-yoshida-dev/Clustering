@@ -6,7 +6,7 @@ import numpy as np
 from scipy.sparse import coo_array
 from scipy.sparse.csgraph import connected_components
 
-from ...types import BoolArray, IntegerArray
+from ....types import BoolArray, IntegerArray
 from .shared_neighbor_graph import SharedNeighborGraph
 
 

@@ -13,4 +13,4 @@ Parameter classes and enums for each supported clustering method. Every paramete
 | [dbscan/](./dbscan/README.md) | DBSCAN parameters, search algorithms, and distance metrics. |
 | [hdbscan/](./hdbscan/README.md) | HDBSCAN parameters and related enums. |
 | [gmm/](./gmm/README.md) | Gaussian Mixture Model parameters and covariance types. |
-| [snn/](./snn/README.md) | Shared nearest neighbor clustering parameters and distance metrics. |
+| [snn/](./snn/README.md) | Shared nearest neighbor clustering: parameters, distance metrics, and the from-scratch estimator. |

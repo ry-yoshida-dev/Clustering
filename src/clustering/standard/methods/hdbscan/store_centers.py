@@ -3,9 +3,18 @@ from enum import Enum
 
 class HDBSCANStoreCenters(Enum):
     """
-    Which cluster centers to compute and store (sklearn ``store_centers``).
+    Which cluster centers scikit-learn's HDBSCAN computes and stores.
 
-    Use ``None`` in parameters (not this enum) to disable center storage.
+    Use None in HDBSCANParameters, not this enum, to disable center storage.
+
+    Attributes
+    ----------
+    CENTROID
+        Store weighted centroids.
+    MEDOID
+        Store medoids.
+    BOTH
+        Store both centroids and medoids.
     """
 
     CENTROID = "centroid"

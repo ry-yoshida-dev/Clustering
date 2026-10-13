@@ -11,8 +11,7 @@ Unconstrained clustering: parameter dataclasses build `ClusteringProcessor` inst
 | [parameter.py](./parameter.py) | Abstract base class for clustering parameters. |
 | [processor.py](./processor.py) | Abstract base class for clustering processors; implements `fit`, `fit_predict`, and `labels` caching on top of a per-estimator label computation. |
 | [processors/](./processors/README.md) | Concrete processors (`TransductiveClusteringProcessor`, `InductiveClusteringProcessor`) and structural typing protocols. |
-| [methods/](./methods/README.md) | Parameter classes and enums for specific clustering methods (K-Means, Agglomerative, DBSCAN, HDBSCAN, GMM, SNN). |
-| [algorithms/](./algorithms/README.md) | From-scratch clustering algorithms not provided by sklearn (shared nearest neighbor clustering). |
+| [methods/](./methods/README.md) | Per-method packages with parameter classes and enums (K-Means, Agglomerative, DBSCAN, HDBSCAN, GMM), plus the from-scratch SNN estimator. |
 
 ## Examples
 

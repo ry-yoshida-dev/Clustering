@@ -43,8 +43,9 @@ class CannotLinkClusteringInputs:
         Returns
         -------
         CannotLinkClusteringInputs
-            The validated inputs, with X averaged with its transpose so that
-            floating-point asymmetry within tolerance is removed exactly.
+            The validated inputs, with X replaced by a newly allocated average
+            of X and its transpose so that floating-point asymmetry within
+            tolerance is removed exactly and callers may modify it in place.
 
         Raises
         ------

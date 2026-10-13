@@ -75,6 +75,13 @@ class TestClusteringLabels(unittest.TestCase):
             cl.labels[0] = 9
         self.assertEqual(list(cl), [0, 1, 2])
 
+    def test_array_conversion_respects_copy_contract(self) -> None:
+        cl = ClusteringLabels([0, 1, 2])
+        self.assertIs(np.asarray(cl), cl.labels)
+        self.assertEqual(np.asarray(cl, dtype=np.int32).dtype, np.int32)
+        with self.assertRaises(ValueError):
+            _ = np.array(cl, dtype=np.int32, copy=False)
+
     def test_tuple_input_is_a_sequence(self) -> None:
         cl = ClusteringLabels((0, 1, 2))
         self.assertEqual(list(cl), [0, 1, 2])

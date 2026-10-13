@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from .processor import CannotLinkClusteringProcessor
 
 
-class CannotLinkClusteringParameter(ABC):
+class CannotLinkClusteringParameters(ABC):
     """
     Base class for cannot-link clustering parameters that build a processor.
     """

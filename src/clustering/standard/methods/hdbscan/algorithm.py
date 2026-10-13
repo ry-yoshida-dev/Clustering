@@ -3,9 +3,18 @@ from enum import Enum
 
 class HDBSCANAlgorithm(Enum):
     """
-    Core-distance computation strategy for sklearn.cluster.HDBSCAN.
+    Nearest neighbor search backend for scikit-learn's HDBSCAN core distances.
 
-    Attributes correspond to sklearn's ``algorithm`` parameter.
+    Attributes
+    ----------
+    AUTO
+        Let scikit-learn choose the backend.
+    BRUTE
+        Brute-force search.
+    KD_TREE
+        KD tree search.
+    BALL_TREE
+        Ball tree search.
     """
 
     AUTO = "auto"

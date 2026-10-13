@@ -4,16 +4,16 @@ from typing import override
 from sklearn.cluster import DBSCAN
 
 from ....method import ClusteringMethod
-from ...parameter import ClusteringParameter
+from ...parameter import ClusteringParameters
 from ...processors import TransductiveClusteringProcessor
 from .algorithm import DBSCANAlgorithm
 from .metric import DBSCANMetric
 
 
-@dataclass
-class DBSCANParameters(ClusteringParameter):
+@dataclass(frozen=True)
+class DBSCANParameters(ClusteringParameters):
     """
-    DBSCANParameters is the parameters for the DBSCAN clustering algorithm.
+    Parameters for scikit-learn's DBSCAN clustering.
 
     Attributes
     ----------

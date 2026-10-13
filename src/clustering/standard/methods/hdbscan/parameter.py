@@ -4,7 +4,7 @@ from typing import override
 from sklearn.cluster import HDBSCAN
 
 from ....method import ClusteringMethod
-from ...parameter import ClusteringParameter
+from ...parameter import ClusteringParameters
 from ...processors import TransductiveClusteringProcessor
 from .algorithm import HDBSCANAlgorithm
 from .cluster_selection_method import HDBSCANClusterSelectionMethod
@@ -12,17 +12,18 @@ from .metric import HDBSCANMetric
 from .store_centers import HDBSCANStoreCenters
 
 
-@dataclass
-class HDBSCANParameters(ClusteringParameter):
+@dataclass(frozen=True)
+class HDBSCANParameters(ClusteringParameters):
     """
-    Parameters for :class:`sklearn.cluster.HDBSCAN`.
+    Parameters for scikit-learn's HDBSCAN.
 
-    Field names and defaults follow the stable API documentation:
+    Defaults follow the stable API documentation; boolean flags are renamed
+    to the is_* convention (allow_single_cluster, copy):
     https://scikit-learn.org/stable/modules/generated/sklearn.cluster.HDBSCAN.html
 
-    ``metric`` is restricted to :class:`HDBSCANMetric`; for a custom callable
+    ``metric`` is restricted to HDBSCANMetric; for a custom callable
     metric, construct ``sklearn.cluster.HDBSCAN`` directly and wrap it with
-    :class:`TransductiveClusteringProcessor`.
+    TransductiveClusteringProcessor.
 
     Attributes
     ----------

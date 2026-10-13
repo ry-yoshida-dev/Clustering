@@ -17,14 +17,14 @@ from .methods import (
     SNNMetric,
     SNNParameters,
 )
-from .parameter import ClusteringParameter
+from .parameter import ClusteringParameters
 from .processor import ClusteringProcessor
 
 __all__ = [
     "AgglomerativeClusteringParameters",
     "AgglomerativeLinkage",
     "AgglomerativeMetric",
-    "ClusteringParameter",
+    "ClusteringParameters",
     "ClusteringProcessor",
     "DBSCANAlgorithm",
     "DBSCANMetric",
