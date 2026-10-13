@@ -41,7 +41,10 @@ class ConstrainedAgglomerativeClustering:
     order in which it discovers reciprocal pairs is not guaranteed to be
     sorted by height (only the finished merge tree is), so every merge is
     recorded and only applied to the union-find structure afterward, sorted
-    by height and cut at distance_threshold. Forbidden pairs are excluded
+    by height and cut at distance_threshold. When the previous chain element
+    ties for the nearest eligible neighbor, it is preferred over any other
+    candidate; without this rule equidistant neighbors can make the chain
+    cycle forever instead of closing. Forbidden pairs are excluded
     from every neighbor lookup rather than folded into the distances, so
     eligibility stays exact instead of relying on distance inflation. This
     brings the running time down from O(n^3) to O(n^2) without changing the
@@ -144,8 +147,9 @@ class ConstrainedAgglomerativeClustering:
                 chain.append(next(iter(candidates)))
 
             current = chain[-1]
+            previous = chain[-2] if len(chain) >= 2 else None
             neighbor, distance = self._nearest_eligible(
-                current, dist, forbidden, active
+                current, previous, dist, forbidden, active
             )
 
             if neighbor is None:
@@ -153,7 +157,7 @@ class ConstrainedAgglomerativeClustering:
                 del chain[-1]
                 continue
 
-            if len(chain) >= 2 and neighbor == chain[-2]:
+            if neighbor == previous:
                 a, b = (
                     (current, neighbor) if current < neighbor else (neighbor, current)
                 )
@@ -175,6 +179,7 @@ class ConstrainedAgglomerativeClustering:
     @staticmethod
     def _nearest_eligible(
         current: int,
+        previous: int | None,
         dist: NumericArray,
         forbidden: NegativeMatrix,
         active: BoolArray,
@@ -186,6 +191,8 @@ class ConstrainedAgglomerativeClustering:
         distance = float(eligible_row.item(neighbor))
         if not np.isfinite(distance):
             return None, np.inf
+        if previous is not None and eligible_row.item(previous) <= distance:
+            return previous, distance
         return neighbor, distance
 
     def _merge(

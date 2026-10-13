@@ -204,6 +204,50 @@ class TestCannotLinkAgglomerativeProcessor(unittest.TestCase):
                     )
                     self.assertTrue(_is_same_partition(actual.labels, expected))
 
+    def test_tied_distances_close_the_chain(self) -> None:
+        distance_matrix = np.array(
+            [
+                [0.0, 2.0, 3.0, 2.0, 3.0],
+                [2.0, 0.0, 3.0, 2.0, 1.0],
+                [3.0, 3.0, 0.0, 2.0, 2.0],
+                [2.0, 2.0, 2.0, 0.0, 3.0],
+                [3.0, 1.0, 2.0, 3.0, 0.0],
+            ]
+        )
+        negative_matrix = np.zeros((5, 5), dtype=bool)
+        negative_matrix[0, [1, 3]] = True
+        negative_matrix[[1, 3], 0] = True
+        proc = CannotLinkAgglomerativeClusteringParameters(
+            distance_threshold=2.5, linkage=AgglomerativeLinkage.SINGLE
+        ).build_processor()
+        actual = proc.fit_predict(distance_matrix, negative_matrix)
+        expected = np.array([0, 1, 1, 1, 1], dtype=np.int64)
+        self.assertTrue(_is_same_partition(actual.labels, expected))
+
+    def test_respects_constraints_on_heavily_tied_inputs(self) -> None:
+        rng = np.random.default_rng(114514)
+        supported_linkages = [
+            AgglomerativeLinkage.SINGLE,
+            AgglomerativeLinkage.COMPLETE,
+            AgglomerativeLinkage.AVERAGE,
+        ]
+        for trial in range(300):
+            n_points = int(rng.integers(4, 10))
+            upper_distances = np.triu(
+                rng.integers(1, 4, size=(n_points, n_points)), k=1
+            ).astype(np.float64)
+            distance_matrix = upper_distances + upper_distances.T
+            upper = np.triu(rng.random((n_points, n_points)) < 0.3, k=1)
+            negative_matrix = upper | upper.T
+            for linkage in supported_linkages:
+                with self.subTest(trial=trial, linkage=linkage):
+                    proc = CannotLinkAgglomerativeClusteringParameters(
+                        distance_threshold=2.5, linkage=linkage
+                    ).build_processor()
+                    labels = proc.fit_predict(distance_matrix, negative_matrix).labels
+                    same_cluster = np.equal.outer(labels, labels)
+                    self.assertFalse(np.any(same_cluster & negative_matrix))
+
     def test_labels_cached_after_fit(self) -> None:
         proc = CannotLinkAgglomerativeClusteringParameters(
             distance_threshold=1.0
