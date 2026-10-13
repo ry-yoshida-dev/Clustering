@@ -16,6 +16,7 @@ class DBSCANAlgorithm(Enum):
     BRUTE
         Brute force algorithm
     """
+
     AUTO = "auto"
     BALL_TREE = "ball_tree"
     KD_TREE = "kd_tree"

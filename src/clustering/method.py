@@ -20,6 +20,7 @@ class ClusteringMethod(Enum):
     SNN
         Shared nearest neighbor clustering.
     """
+
     KMEANS = "KMeans"
     AGGLOMERATIVE = "Agglomerative"
     DBSCAN = "DBSCAN"

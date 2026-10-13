@@ -24,7 +24,6 @@ class InductiveClusteringProcessor(ClusteringProcessor):
 
     processor: InductiveClusteringLike
 
-    @override
     def predict(self, X: NumericArray) -> ClusteringLabels:
         """
         Predict the clustering labels for new data.

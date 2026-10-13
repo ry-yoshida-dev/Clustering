@@ -2,7 +2,7 @@
 
 ## Overview
 
-Cannot-link constrained clustering. Alongside the main precomputed distance matrix `X`, callers supply `negative_matrix`, a symmetric boolean matrix marking pairs of points that must never end up in the same cluster. `CannotLinkClusteringParameter` builds a `CannotLinkClusteringProcessor`, whose `fit`/`fit_predict` take both `X` and `negative_matrix`.
+Cannot-link constrained clustering. Alongside the main precomputed distance matrix `X` (square, finite, non-negative, and symmetric up to floating-point tolerance), callers supply `negative_matrix`, a symmetric boolean matrix marking pairs of points that must never end up in the same cluster. `CannotLinkClusteringParameter` builds a `CannotLinkClusteringProcessor`, whose `fit`/`fit_predict` take both `X` and `negative_matrix`. There is no `predict`, since constrained clustering only labels its training data.
 
 Only clustering methods that fit a precomputed-distance-matrix architecture are supported here. Feature-vector/centroid- or EM-based methods (K-Means, GMM) are not, since enforcing hard pairwise constraints there would require a different family of algorithms (e.g. COP-KMeans) built around iterative reassignment rather than a distance matrix.
 
@@ -22,7 +22,7 @@ Only clustering methods that fit a precomputed-distance-matrix architecture are 
 
 ```python
 from clustering import CannotLinkAgglomerativeClusteringParameters
-from clustering.standard import AgglomerativeLinkage
+from clustering import AgglomerativeLinkage
 
 proc = CannotLinkAgglomerativeClusteringParameters(
     distance_threshold=0.5,

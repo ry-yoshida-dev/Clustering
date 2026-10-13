@@ -20,6 +20,7 @@ class AgglomerativeMetric(Enum):
     PRECOMPUTED
         Precomputed distance
     """
+
     EUCLIDEAN = "euclidean"
     L1 = "l1"
     L2 = "l2"

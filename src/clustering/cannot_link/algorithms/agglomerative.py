@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from ...standard.methods.agglomerative.linkage import AgglomerativeLinkage
+from ...linkage import AgglomerativeLinkage
 from ...types import BoolArray, FloatArray, IntegerArray, NumericArray
 from ..inputs import CannotLinkClusteringInputs
 from ..types import NegativeMatrix
@@ -79,8 +79,8 @@ class ConstrainedAgglomerativeClustering:
                 return lambda dist_a, dist_b, size_a, size_b: np.maximum(dist_a, dist_b)
             case AgglomerativeLinkage.AVERAGE:
                 return lambda dist_a, dist_b, size_a, size_b: (
-                    size_a * dist_a + size_b * dist_b
-                ) / (size_a + size_b)
+                    (size_a * dist_a + size_b * dist_b) / (size_a + size_b)
+                )
             case AgglomerativeLinkage.WARD:
                 raise ValueError(
                     "ward linkage is not supported for cannot-link constrained agglomerative clustering"
@@ -100,7 +100,9 @@ class ConstrainedAgglomerativeClustering:
         """
         self.labels_ = self._run(X, negative_matrix)
 
-    def fit_predict(self, X: NumericArray, negative_matrix: NegativeMatrix) -> IntegerArray:
+    def fit_predict(
+        self, X: NumericArray, negative_matrix: NegativeMatrix
+    ) -> IntegerArray:
         """
         Fit the algorithm and return the resulting cluster labels.
 
@@ -142,7 +144,9 @@ class ConstrainedAgglomerativeClustering:
                 chain.append(next(iter(candidates)))
 
             current = chain[-1]
-            neighbor, distance = self._nearest_eligible(current, dist, forbidden, active)
+            neighbor, distance = self._nearest_eligible(
+                current, dist, forbidden, active
+            )
 
             if neighbor is None:
                 candidates.discard(current)
@@ -150,7 +154,9 @@ class ConstrainedAgglomerativeClustering:
                 continue
 
             if len(chain) >= 2 and neighbor == chain[-2]:
-                a, b = (current, neighbor) if current < neighbor else (neighbor, current)
+                a, b = (
+                    (current, neighbor) if current < neighbor else (neighbor, current)
+                )
                 self._merge(a, b, dist, forbidden, size, active)
                 merges.append((distance, a, b))
                 candidates.discard(b)

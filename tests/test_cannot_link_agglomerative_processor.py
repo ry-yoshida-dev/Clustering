@@ -6,9 +6,8 @@ from typing import cast
 import numpy as np
 from scipy.spatial.distance import cdist
 
-from clustering import CannotLinkAgglomerativeClusteringParameters
+from clustering import AgglomerativeLinkage, CannotLinkAgglomerativeClusteringParameters
 from clustering.cannot_link.types import NegativeMatrix
-from clustering.standard import AgglomerativeLinkage
 
 
 def _two_close_pairs() -> np.ndarray:
@@ -88,6 +87,35 @@ class TestCannotLinkAgglomerativeProcessor(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = proc.fit_predict(distance_matrix, negative_matrix)
 
+    def test_asymmetric_distance_matrix_raises(self) -> None:
+        distance_matrix = np.array([[0.0, 1.0, 5.0], [5.0, 0.0, 1.0], [1.0, 5.0, 0.0]])
+        negative_matrix = np.zeros((3, 3), dtype=bool)
+        proc = CannotLinkAgglomerativeClusteringParameters(
+            distance_threshold=0.5
+        ).build_processor()
+        with self.assertRaises(ValueError):
+            _ = proc.fit_predict(distance_matrix, negative_matrix)
+
+    def test_negative_distance_raises(self) -> None:
+        distance_matrix = _two_close_pairs()
+        distance_matrix[0, 1] = distance_matrix[1, 0] = -0.1
+        negative_matrix = np.zeros((4, 4), dtype=bool)
+        proc = CannotLinkAgglomerativeClusteringParameters(
+            distance_threshold=1.0
+        ).build_processor()
+        with self.assertRaises(ValueError):
+            _ = proc.fit_predict(distance_matrix, negative_matrix)
+
+    def test_distance_matrix_within_tolerance_of_symmetric_is_accepted(self) -> None:
+        distance_matrix = _two_close_pairs()
+        distance_matrix[0, 1] += 1e-12
+        negative_matrix = np.zeros((4, 4), dtype=bool)
+        proc = CannotLinkAgglomerativeClusteringParameters(
+            distance_threshold=1.0
+        ).build_processor()
+        out = proc.fit_predict(distance_matrix, negative_matrix)
+        self.assertEqual(out.num_clusters(), 2)
+
     def test_negative_matrix_diagonal_raises(self) -> None:
         distance_matrix = _two_close_pairs()
         negative_matrix = np.zeros((4, 4), dtype=bool)
@@ -98,15 +126,11 @@ class TestCannotLinkAgglomerativeProcessor(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = proc.fit_predict(distance_matrix, negative_matrix)
 
-    def test_predict_not_supported(self) -> None:
-        distance_matrix = _two_close_pairs()
-        negative_matrix = np.zeros((4, 4), dtype=bool)
+    def test_predict_is_not_offered(self) -> None:
         proc = CannotLinkAgglomerativeClusteringParameters(
             distance_threshold=1.0
         ).build_processor()
-        _ = proc.fit_predict(distance_matrix, negative_matrix)
-        with self.assertRaises(ValueError):
-            _ = proc.predict(distance_matrix)
+        self.assertFalse(hasattr(proc, "predict"))
 
     def test_is_precomputed_input_required(self) -> None:
         proc = CannotLinkAgglomerativeClusteringParameters(

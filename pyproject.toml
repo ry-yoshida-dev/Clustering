@@ -41,3 +41,19 @@ strict = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [".", "src"]
+
+[dependency-groups]
+dev = [
+    "basedpyright",
+    "mypy",
+    "pytest",
+    "ruff",
+]
+
+[tool.ruff]
+target-version = "py312"
+extend-exclude = ["stubs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]

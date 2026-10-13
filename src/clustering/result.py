@@ -155,7 +155,7 @@ class ClusteringLabels:
         unique_list = cast(list[int], unique.tolist())
         counts_list = cast(list[int], counts_arr.tolist())
         sorted_counts = sorted(
-            zip(unique_list, counts_list),
+            zip(unique_list, counts_list, strict=True),
             key=lambda pair: pair[1],
             reverse=True,
         )
@@ -297,5 +297,12 @@ class ClusteringLabels:
         -------
         int
             The label at the given index.
+
+        Raises
+        ------
+        IndexError
+            If index is outside the range [0, len(self)).
         """
+        if not 0 <= index < len(self):
+            raise IndexError(f"index: {index} is out of range for {len(self)} labels")
         return self.labels.item(index)

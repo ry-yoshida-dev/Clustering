@@ -17,7 +17,8 @@ class ClusteringProcessor(ABC):
 
     Subclasses provide the raw label computation; this base class caches the
     labels of the last fit so that ``labels`` is available after either ``fit``
-    or ``fit_predict``.
+    or ``fit_predict``. Labeling unseen data is not part of this interface;
+    only InductiveClusteringProcessor offers ``predict``.
 
     Attributes
     ----------
@@ -79,22 +80,6 @@ class ClusteringProcessor(ABC):
                 "Processor is not fitted yet. Call fit() or fit_predict() first."
             )
         return self._fitted_labels
-
-    @abstractmethod
-    def predict(self, X: NumericArray) -> ClusteringLabels:
-        """
-        Predict the clustering labels for new data.
-
-        Parameters
-        ----------
-        X : NumericArray
-            The input data.
-
-        Returns
-        -------
-        ClusteringLabels
-            The clustering labels.
-        """
 
     @property
     @abstractmethod

@@ -117,9 +117,7 @@ class SharedNeighborGraph:
         source_neighbors: IntegerArray = np.take(neighbor_lists, sources, axis=0)
         is_shared = cls._contains(
             membership_keys,
-            cls._membership_keys(
-                targets[:, np.newaxis], source_neighbors, n_samples
-            ),
+            cls._membership_keys(targets[:, np.newaxis], source_neighbors, n_samples),
         )
         shared_counts: IntegerArray = is_shared.sum(axis=1, dtype=np.int64)
         return cls(sources=sources, targets=targets, shared_counts=shared_counts)

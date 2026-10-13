@@ -3,11 +3,11 @@ from .cannot_link import (
     CannotLinkClusteringParameter,
     CannotLinkClusteringProcessor,
 )
+from .linkage import AgglomerativeLinkage
 from .method import ClusteringMethod
 from .result import ClusteringLabels
 from .standard import (
     AgglomerativeClusteringParameters,
-    AgglomerativeLinkage,
     AgglomerativeMetric,
     ClusteringParameter,
     ClusteringProcessor,

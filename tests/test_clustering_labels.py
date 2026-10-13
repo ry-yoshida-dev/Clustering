@@ -55,6 +55,14 @@ class TestClusteringLabels(unittest.TestCase):
         with self.assertRaises(IndexError):
             _ = cl.get_labels([-1])
 
+    def test_getitem_out_of_range_raises(self) -> None:
+        cl = ClusteringLabels([0, 1, 2])
+        self.assertEqual(cl[2], 2)
+        with self.assertRaises(IndexError):
+            _ = cl[3]
+        with self.assertRaises(IndexError):
+            _ = cl[-1]
+
     def test_get_labels_empty_indices(self) -> None:
         cl = ClusteringLabels([0, 1, 2])
         self.assertEqual(cl.get_labels([]), [])
@@ -72,9 +80,7 @@ class TestClusteringLabels(unittest.TestCase):
         self.assertEqual(list(cl), [0, 1, 2])
 
     def test_hashable(self) -> None:
-        self.assertEqual(
-            hash(ClusteringLabels([0, 1])), hash(ClusteringLabels([0, 1]))
-        )
+        self.assertEqual(hash(ClusteringLabels([0, 1])), hash(ClusteringLabels([0, 1])))
 
     def test_get_mask(self) -> None:
         cl = ClusteringLabels([0, -1, 1], noise_label=-1)

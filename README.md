@@ -2,7 +2,7 @@
 
 ## Overview
 
-Clustering (`clustering`) is a Python package that wraps scikit-learn cluster estimators behind a small, consistent API: parameter dataclasses build `ClusteringProcessor` instances with `fit`, `fit_predict`, and (where supported) `predict`.
+Clustering (`clustering`) is a Python package that wraps scikit-learn cluster estimators behind a small, consistent API: parameter dataclasses build `ClusteringProcessor` instances with `fit` and `fit_predict`; processors for methods that can label unseen data also offer `predict`.
 
 Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. All parameter classes and enums are exported from the top-level `clustering` package.
 
@@ -20,12 +20,6 @@ For development:
 
 ```bash
 pip install -e .
-```
-
-If you only need dependencies:
-
-```bash
-pip install -r requirements.txt
 ```
 
 ## Quick example
@@ -56,11 +50,17 @@ labels = proc.fit_predict(X)
 
 - `fit_predict` and `labels` return `ClusteringLabels`, an immutable wrapper around a read-only 1-D `numpy.int64` vector (`ClusteringLabels.labels`).
 - `labels` returns the training labels of the last `fit` / `fit_predict`; reading it before fitting raises `sklearn.exceptions.NotFittedError`.
-- Only K-Means and GMM support `predict` on unseen data. Agglomerative, DBSCAN, HDBSCAN, and SNN raise `ValueError` from `predict`; use `fit_predict` on the training data.
+- Only K-Means and GMM support `predict` on unseen data: their parameters build an `InductiveClusteringProcessor`. Agglomerative, DBSCAN, HDBSCAN, SNN, and cannot-link processors have no `predict` method at all, so calling it is a type error; use `fit_predict` on the training data.
 
 ## Development
 
 ```bash
-uv run --with pytest pytest
-uv run --with mypy mypy
+uv sync
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy
+uv run basedpyright src tests
+uv run pytest
 ```
+
+The same checks run in CI on every push to `main` and every pull request.

@@ -5,7 +5,6 @@ from sklearn.cluster import DBSCAN
 
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
-from ...processor import ClusteringProcessor
 from ...processors import TransductiveClusteringProcessor
 from .algorithm import DBSCANAlgorithm
 from .metric import DBSCANMetric
@@ -29,6 +28,7 @@ class DBSCANParameters(ClusteringParameter):
     leaf_size : int
         The leaf size for the DBSCAN algorithm.
     """
+
     eps: float = 0.5
     min_samples: int = 2
     metric: DBSCANMetric = DBSCANMetric.EUCLIDEAN
@@ -47,14 +47,14 @@ class DBSCANParameters(ClusteringParameter):
             raise ValueError("leaf_size must be greater than 0")
 
     @override
-    def build_processor(self) -> ClusteringProcessor:
+    def build_processor(self) -> TransductiveClusteringProcessor:
         dbscan_processor = DBSCAN(
             eps=self.eps,
             min_samples=self.min_samples,
             metric=self.metric.value,
             algorithm=self.algorithm.value,
             leaf_size=self.leaf_size,
-            )
+        )
         return TransductiveClusteringProcessor(
             method=ClusteringMethod.DBSCAN,
             processor=dbscan_processor,

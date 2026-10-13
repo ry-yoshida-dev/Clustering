@@ -37,26 +37,14 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
             Precomputed pairwise distance matrix.
         negative_matrix : NegativeMatrix
             Symmetric boolean mask marking cannot-link pairs.
-        """
-        self.processor.fit(X, negative_matrix)
-
-    @override
-    def predict(self, X: NumericArray) -> ClusteringLabels:
-        """
-        Predict is not supported for this processor type.
-
-        Parameters
-        ----------
-        X : NumericArray
-            Unused; present for the CannotLinkClusteringProcessor interface.
 
         Raises
         ------
-        ValueError
-            Always, because constrained agglomerative clustering does not
-            support predicting on new data.
+        RuntimeError
+            If the resulting labels violate a cannot-link constraint; this
+            indicates an internal invariant failure rather than a usage error.
         """
-        raise ValueError(f"predict() is not supported for {type(self.processor)}")
+        _ = self.fit_predict(X, negative_matrix)
 
     @override
     def fit_predict(

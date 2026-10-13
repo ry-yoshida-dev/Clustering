@@ -18,6 +18,7 @@ class DBSCANMetric(Enum):
     PRECOMPUTED
         Precomputed distance
     """
+
     EUCLIDEAN = "euclidean"
     MANHATTAN = "manhattan"
     PRECOMPUTED = "precomputed"

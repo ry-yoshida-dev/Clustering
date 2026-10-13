@@ -15,7 +15,9 @@ Parameters for density-based shared nearest neighbor (SNN) clustering. Similarit
 ```python
 from clustering.standard.methods import SNNParameters
 
-proc = SNNParameters(n_neighbors=10, min_shared_neighbors=3, min_samples=3).build_processor()
+proc = SNNParameters(
+    n_neighbors=10, min_shared_neighbors=3, min_samples=3
+).build_processor()
 result = proc.fit_predict(X)
 print(result.labels)
 ```

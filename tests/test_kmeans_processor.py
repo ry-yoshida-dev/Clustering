@@ -18,7 +18,10 @@ class TestKMeansProcessor(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = KMeansParameters(max_iter=0)
         with self.assertRaises(ValueError):
-            _ = KMeansParameters(tol=0)
+            _ = KMeansParameters(tol=-1e-4)
+
+    def test_zero_tolerance_is_accepted(self) -> None:
+        self.assertEqual(KMeansParameters(tol=0).tol, 0)
 
     def test_fit_predict(self) -> None:
         x = two_blobs()

@@ -23,7 +23,9 @@ class TestAgglomerativeProcessor(unittest.TestCase):
                 distance_threshold=0,
             )
         with self.assertRaises(ValueError):
-            _ = AgglomerativeClusteringParameters(n_clusters=None, distance_threshold=None)
+            _ = AgglomerativeClusteringParameters(
+                n_clusters=None, distance_threshold=None
+            )
         with self.assertRaises(ValueError):
             _ = AgglomerativeClusteringParameters(n_clusters=2, distance_threshold=0.5)
         with self.assertRaises(ValueError):
@@ -59,17 +61,14 @@ class TestAgglomerativeProcessor(unittest.TestCase):
         out = proc.fit_predict(distance_matrix)
         self.assertEqual(len(np.unique(out.labels)), 2)
 
-    def test_predict_not_supported(self) -> None:
-        x = two_blobs()
+    def test_predict_is_not_offered(self) -> None:
         proc = AgglomerativeClusteringParameters(
             n_clusters=2,
             distance_threshold=None,
             metric=AgglomerativeMetric.EUCLIDEAN,
             linkage=AgglomerativeLinkage.COMPLETE,
         ).build_processor()
-        _ = proc.fit_predict(x)
-        with self.assertRaises(ValueError):
-            _ = proc.predict(x)
+        self.assertFalse(hasattr(proc, "predict"))
 
 
 if __name__ == "__main__":

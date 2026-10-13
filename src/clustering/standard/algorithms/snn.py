@@ -162,9 +162,7 @@ class SharedNearestNeighborClustering:
         return self.sort_neighbors(distances, indices.astype(np.int64))
 
     @staticmethod
-    def sort_neighbors(
-        distances: NumericArray, indices: IntegerArray
-    ) -> IntegerArray:
+    def sort_neighbors(distances: NumericArray, indices: IntegerArray) -> IntegerArray:
         """
         Order each neighbor list by distance, breaking ties by point index.
 

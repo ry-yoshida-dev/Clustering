@@ -2,7 +2,7 @@
 
 ## Overview
 
-Unconstrained clustering: parameter dataclasses build `ClusteringProcessor` instances with `fit`, `fit_predict`, and (where supported) `predict`, wrapping scikit-learn estimators (K-Means, Agglomerative Clustering, DBSCAN, HDBSCAN, GMM) and from-scratch algorithms for methods sklearn lacks (shared nearest neighbor clustering).
+Unconstrained clustering: parameter dataclasses build `ClusteringProcessor` instances with `fit` and `fit_predict` (plus `predict` on `InductiveClusteringProcessor` only), wrapping scikit-learn estimators (K-Means, Agglomerative Clustering, DBSCAN, HDBSCAN, GMM) and from-scratch algorithms for methods sklearn lacks (shared nearest neighbor clustering).
 
 ## Components
 

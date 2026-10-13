@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import override
 
+from ....linkage import AgglomerativeLinkage
 from ....method import ClusteringMethod
-from ....standard.methods.agglomerative.linkage import AgglomerativeLinkage
 from ...algorithms.agglomerative import ConstrainedAgglomerativeClustering
 from ...parameter import CannotLinkClusteringParameter
 from ...processor import CannotLinkClusteringProcessor

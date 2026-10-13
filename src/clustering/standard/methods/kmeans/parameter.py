@@ -5,7 +5,6 @@ from sklearn.cluster import KMeans
 
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
-from ...processor import ClusteringProcessor
 from ...processors import InductiveClusteringProcessor
 from .initialization import KMeansInitialization
 
@@ -30,6 +29,7 @@ class KMeansParameters(ClusteringParameter):
     random_state : int | None
         The random state for the KMeans clustering algorithm.
     """
+
     n_clusters: int = 2
     init: KMeansInitialization = KMeansInitialization.KMEANS_PLUS_PLUS
     max_iter: int = 300
@@ -45,11 +45,11 @@ class KMeansParameters(ClusteringParameter):
             raise ValueError("n_clusters must be greater than 0")
         if self.max_iter <= 0:
             raise ValueError("max_iter must be greater than 0")
-        if self.tol <= 0:
-            raise ValueError("tol must be greater than 0")
+        if self.tol < 0:
+            raise ValueError("tol must be non-negative")
 
     @override
-    def build_processor(self) -> ClusteringProcessor:
+    def build_processor(self) -> InductiveClusteringProcessor:
         kmeans_processor = KMeans(
             n_clusters=self.n_clusters,
             init=self.init.value,

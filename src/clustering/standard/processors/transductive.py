@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import override
 
-from ...result import ClusteringLabels
 from ...types import IntegerArray, NumericArray
 from ..processor import ClusteringProcessor
 from .protocols.transductive import TransductiveClusteringLike
@@ -13,6 +12,9 @@ from .protocols.transductive import TransductiveClusteringLike
 class TransductiveClusteringProcessor(ClusteringProcessor):
     """
     Wraps cluster estimators that only support labeling their training data.
+
+    It deliberately offers no ``predict``, so labeling unseen data with these
+    estimators is rejected by the type checker instead of at runtime.
 
     Used for AgglomerativeClustering, DBSCAN, HDBSCAN,
     SharedNearestNeighborClustering, and similar estimators.
@@ -27,23 +29,6 @@ class TransductiveClusteringProcessor(ClusteringProcessor):
 
     processor: TransductiveClusteringLike
     is_precomputed_metric: bool
-
-    @override
-    def predict(self, X: NumericArray) -> ClusteringLabels:
-        """
-        Predict is not supported for this processor type.
-
-        Parameters
-        ----------
-        X : NumericArray
-            Unused; present for the ClusteringProcessor interface.
-
-        Raises
-        ------
-        ValueError
-            Always, because these estimators cannot label unseen data.
-        """
-        raise ValueError(f"predict() is not supported for {type(self.processor)}")
 
     @property
     @override

@@ -2,14 +2,13 @@
 
 ## Overview
 
-Parameters for scikit-learn `AgglomerativeClustering`. Use `AgglomerativeMetric.PRECOMPUTED` to cluster a square distance matrix (ward linkage requires Euclidean feature vectors).
+Parameters for scikit-learn `AgglomerativeClustering`. Use `AgglomerativeMetric.PRECOMPUTED` to cluster a square distance matrix (ward linkage requires Euclidean feature vectors). The linkage enum `AgglomerativeLinkage` lives in the shared [linkage.py](../../../linkage.py) and is re-exported here.
 
 ## Components
 
 | Component | Description |
 |-----------|-------------|
 | [parameter.py](./parameter.py) | `AgglomerativeClusteringParameters`. |
-| [linkage.py](./linkage.py) | `AgglomerativeLinkage` enum (ward, complete, average, single). |
 | [metric.py](./metric.py) | `AgglomerativeMetric` enum of supported distance metrics. |
 
 ## Examples

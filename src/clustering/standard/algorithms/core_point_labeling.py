@@ -56,7 +56,9 @@ class CorePointLabeling:
         return self._compact_labels(labels)
 
     def _core_components(self, is_core: BoolArray) -> IntegerArray:
-        is_core_link = is_core[self.strong_links.sources] & is_core[self.strong_links.targets]
+        is_core_link = (
+            is_core[self.strong_links.sources] & is_core[self.strong_links.targets]
+        )
         sources = self.strong_links.sources[is_core_link]
         targets = self.strong_links.targets[is_core_link]
         adjacency = coo_array(
@@ -72,7 +74,9 @@ class CorePointLabeling:
         is_core: BoolArray,
         components: IntegerArray,
     ) -> None:
-        is_border_link = ~is_core[self.strong_links.sources] & is_core[self.strong_links.targets]
+        is_border_link = (
+            ~is_core[self.strong_links.sources] & is_core[self.strong_links.targets]
+        )
         sources = self.strong_links.sources[is_border_link]
         targets = self.strong_links.targets[is_border_link]
         shared_counts = self.strong_links.shared_counts[is_border_link]

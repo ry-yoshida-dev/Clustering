@@ -94,12 +94,9 @@ class TestSNNProcessor(unittest.TestCase):
         with self.assertRaises(NotFittedError):
             _ = proc.labels
 
-    def test_predict_not_supported(self) -> None:
-        x = two_blobs()
+    def test_predict_is_not_offered(self) -> None:
         proc = SNNParameters(n_neighbors=10).build_processor()
-        _ = proc.fit_predict(x)
-        with self.assertRaises(ValueError):
-            _ = proc.predict(x)
+        self.assertFalse(hasattr(proc, "predict"))
 
     def test_too_few_samples_raises(self) -> None:
         proc = SNNParameters(n_neighbors=10).build_processor()
@@ -149,9 +146,7 @@ class TestSharedNeighborGraph(unittest.TestCase):
             batched = SharedNeighborGraph.from_neighbors(neighbors)
         np.testing.assert_array_equal(batched.sources, single_batch.sources)
         np.testing.assert_array_equal(batched.targets, single_batch.targets)
-        np.testing.assert_array_equal(
-            batched.shared_counts, single_batch.shared_counts
-        )
+        np.testing.assert_array_equal(batched.shared_counts, single_batch.shared_counts)
 
 
 class TestCorePointLabeling(unittest.TestCase):

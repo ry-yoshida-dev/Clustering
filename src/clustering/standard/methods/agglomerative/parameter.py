@@ -3,11 +3,10 @@ from typing import override
 
 from sklearn.cluster import AgglomerativeClustering
 
+from ....linkage import AgglomerativeLinkage
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
-from ...processor import ClusteringProcessor
 from ...processors import TransductiveClusteringProcessor
-from .linkage import AgglomerativeLinkage
 from .metric import AgglomerativeMetric
 
 
@@ -27,6 +26,7 @@ class AgglomerativeClusteringParameters(ClusteringParameter):
     linkage : AgglomerativeLinkage
         The linkage for the Agglomerative Clustering algorithm.
     """
+
     n_clusters: int | None = None
     distance_threshold: float | None = 0.3
     metric: AgglomerativeMetric = AgglomerativeMetric.PRECOMPUTED
@@ -43,18 +43,23 @@ class AgglomerativeClusteringParameters(ClusteringParameter):
         if self.n_clusters is None and self.distance_threshold is None:
             raise ValueError("n_clusters or distance_threshold must be set")
         if self.n_clusters is not None and self.distance_threshold is not None:
-            raise ValueError("n_clusters and distance_threshold cannot be set at the same time")
-        if self.linkage == AgglomerativeLinkage.WARD and self.metric != AgglomerativeMetric.EUCLIDEAN:
-            raise ValueError("Ward linkage requires Euclidean metric")        
+            raise ValueError(
+                "n_clusters and distance_threshold cannot be set at the same time"
+            )
+        if (
+            self.linkage == AgglomerativeLinkage.WARD
+            and self.metric != AgglomerativeMetric.EUCLIDEAN
+        ):
+            raise ValueError("Ward linkage requires Euclidean metric")
 
     @override
-    def build_processor(self) -> ClusteringProcessor:
+    def build_processor(self) -> TransductiveClusteringProcessor:
         agglomerative_processor = AgglomerativeClustering(
             n_clusters=self.n_clusters,
             metric=self.metric.value,
             distance_threshold=self.distance_threshold,
-            linkage=self.linkage.value
-            )
+            linkage=self.linkage.value,
+        )
         return TransductiveClusteringProcessor(
             method=ClusteringMethod.AGGLOMERATIVE,
             processor=agglomerative_processor,

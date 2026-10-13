@@ -31,12 +31,9 @@ class TestDBSCANProcessor(unittest.TestCase):
         lab = proc.labels
         self.assertEqual(lab.labels.shape[0], x.shape[0])
 
-    def test_predict_not_supported(self) -> None:
-        x = two_blobs()
+    def test_predict_is_not_offered(self) -> None:
         proc = DBSCANParameters(eps=1.5, min_samples=3).build_processor()
-        _ = proc.fit_predict(x)
-        with self.assertRaises(ValueError):
-            _ = proc.predict(x)
+        self.assertFalse(hasattr(proc, "predict"))
 
     def test_labels_before_fit_raises(self) -> None:
         proc = DBSCANParameters().build_processor()
@@ -45,7 +42,9 @@ class TestDBSCANProcessor(unittest.TestCase):
 
     def test_is_precomputed_input_required(self) -> None:
         euclidean = DBSCANParameters(metric=DBSCANMetric.EUCLIDEAN).build_processor()
-        precomputed = DBSCANParameters(metric=DBSCANMetric.PRECOMPUTED).build_processor()
+        precomputed = DBSCANParameters(
+            metric=DBSCANMetric.PRECOMPUTED
+        ).build_processor()
         self.assertFalse(euclidean.is_precomputed_input_required)
         self.assertTrue(precomputed.is_precomputed_input_required)
 

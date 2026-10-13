@@ -34,12 +34,9 @@ class TestHDBSCANProcessor(unittest.TestCase):
         proc.fit(x)
         self.assertEqual(proc.labels.labels.shape[0], x.shape[0])
 
-    def test_predict_not_supported(self) -> None:
-        x = two_blobs()
+    def test_predict_is_not_offered(self) -> None:
         proc = HDBSCANParameters(min_cluster_size=5).build_processor()
-        _ = proc.fit_predict(x)
-        with self.assertRaises(ValueError):
-            _ = proc.predict(x)
+        self.assertFalse(hasattr(proc, "predict"))
 
 
 if __name__ == "__main__":

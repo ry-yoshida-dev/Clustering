@@ -3,7 +3,10 @@ from enum import Enum
 
 class AgglomerativeLinkage(Enum):
     """
-    AgglomerativeLinkage is a enum class for the linkage of the AgglomerativeClustering algorithm for scikit-learn.
+    Linkage criterion for agglomerative clustering.
+
+    Shared by the scikit-learn backed AgglomerativeClusteringParameters and the
+    cannot-link constrained agglomerative clustering.
 
     Attributes
     ----------
@@ -16,6 +19,7 @@ class AgglomerativeLinkage(Enum):
     WARD
         Ward linkage
     """
+
     SINGLE = "single"
     COMPLETE = "complete"
     AVERAGE = "average"

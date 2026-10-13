@@ -4,4 +4,4 @@ from .parameter import GMMParameters
 __all__ = [
     "GMMCovarianceType",
     "GMMParameters",
-    ]
+]

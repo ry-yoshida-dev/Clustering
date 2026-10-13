@@ -12,5 +12,6 @@ class KMeansInitialization(Enum):
     KMEANS_PLUS_PLUS
         KMeans++ initialization. <- recommended
     """
+
     RANDOM = "random"
     KMEANS_PLUS_PLUS = "k-means++"

@@ -14,6 +14,9 @@ class CannotLinkClusteringProcessor(ABC):
     """
     Unified interface for clustering under hard cannot-link constraints.
 
+    Constrained clustering only labels its training data, so this interface
+    offers no ``predict``.
+
     Attributes
     ----------
     method : ClusteringMethod
@@ -33,22 +36,6 @@ class CannotLinkClusteringProcessor(ABC):
             Precomputed pairwise distance matrix.
         negative_matrix : NegativeMatrix
             Symmetric boolean mask marking cannot-link pairs.
-        """
-
-    @abstractmethod
-    def predict(self, X: NumericArray) -> ClusteringLabels:
-        """
-        Predict the clustering labels for new data.
-
-        Parameters
-        ----------
-        X : NumericArray
-            Unused; present for the CannotLinkClusteringProcessor interface.
-
-        Raises
-        ------
-        ValueError
-            Always; cannot-link processors do not support predicting on new data.
         """
 
     @abstractmethod

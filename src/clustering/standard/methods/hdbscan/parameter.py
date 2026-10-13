@@ -1,11 +1,10 @@
 from dataclasses import dataclass
-from typing import Literal, override
+from typing import override
 
 from sklearn.cluster import HDBSCAN
 
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
-from ...processor import ClusteringProcessor
 from ...processors import TransductiveClusteringProcessor
 from .algorithm import HDBSCANAlgorithm
 from .cluster_selection_method import HDBSCANClusterSelectionMethod
@@ -24,6 +23,40 @@ class HDBSCANParameters(ClusteringParameter):
     ``metric`` is restricted to :class:`HDBSCANMetric`; for a custom callable
     metric, construct ``sklearn.cluster.HDBSCAN`` directly and wrap it with
     :class:`TransductiveClusteringProcessor`.
+
+    Attributes
+    ----------
+    min_cluster_size : int
+        Minimum number of samples in a group for it to be a cluster.
+    min_samples : int | None
+        Number of samples in a neighborhood for a point to be a core point;
+        defaults to min_cluster_size when None.
+    cluster_selection_epsilon : float
+        Distance threshold below which clusters are merged.
+    max_cluster_size : int | None
+        Upper bound on the size of a cluster returned by EOM selection; no
+        bound when None.
+    metric : HDBSCANMetric
+        Distance metric between points.
+    metric_params : dict[str, object] | None
+        Extra keyword arguments for the metric function.
+    alpha : float
+        Distance scaling parameter used in robust single linkage.
+    algorithm : HDBSCANAlgorithm
+        Nearest neighbor search backend for core distances.
+    leaf_size : int
+        Leaf size for tree-based neighbor search backends.
+    n_jobs : int | None
+        Number of parallel jobs for the neighbor search.
+    cluster_selection_method : HDBSCANClusterSelectionMethod
+        How flat clusters are extracted from the cluster tree.
+    is_single_cluster_allowed : bool
+        Whether the result may consist of a single cluster.
+    store_centers : HDBSCANStoreCenters | None
+        Which cluster centers to compute and store; none when None.
+    is_input_copied : bool
+        Whether the input is copied before any in-place modification, so the
+        data passed to fit is never overwritten.
     """
 
     min_cluster_size: int = 5
@@ -39,9 +72,9 @@ class HDBSCANParameters(ClusteringParameter):
     cluster_selection_method: HDBSCANClusterSelectionMethod = (
         HDBSCANClusterSelectionMethod.EOM
     )
-    allow_single_cluster: bool = False
+    is_single_cluster_allowed: bool = False
     store_centers: HDBSCANStoreCenters | None = None
-    copy: bool | Literal["warn"] = "warn"
+    is_input_copied: bool = True
 
     def __post_init__(self) -> None:
         self._validate_parameters()
@@ -61,7 +94,7 @@ class HDBSCANParameters(ClusteringParameter):
             raise ValueError("alpha must be greater than 0")
 
     @override
-    def build_processor(self) -> ClusteringProcessor:
+    def build_processor(self) -> TransductiveClusteringProcessor:
         hdbscan_processor: HDBSCAN = HDBSCAN(
             min_cluster_size=self.min_cluster_size,
             min_samples=self.min_samples,
@@ -74,11 +107,11 @@ class HDBSCANParameters(ClusteringParameter):
             leaf_size=self.leaf_size,
             n_jobs=self.n_jobs,
             cluster_selection_method=self.cluster_selection_method.value,
-            allow_single_cluster=self.allow_single_cluster,
+            allow_single_cluster=self.is_single_cluster_allowed,
             store_centers=(
                 None if self.store_centers is None else self.store_centers.value
             ),
-            copy=self.copy,
+            copy=self.is_input_copied,
         )
         return TransductiveClusteringProcessor(
             method=ClusteringMethod.HDBSCAN,

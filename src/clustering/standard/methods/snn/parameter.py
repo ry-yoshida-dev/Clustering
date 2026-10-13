@@ -4,7 +4,6 @@ from typing import override
 from ....method import ClusteringMethod
 from ...algorithms import SharedNearestNeighborClustering, SNNMetric
 from ...parameter import ClusteringParameter
-from ...processor import ClusteringProcessor
 from ...processors import TransductiveClusteringProcessor
 
 
@@ -41,7 +40,7 @@ class SNNParameters(ClusteringParameter):
         )
 
     @override
-    def build_processor(self) -> ClusteringProcessor:
+    def build_processor(self) -> TransductiveClusteringProcessor:
         algorithm = SharedNearestNeighborClustering(
             n_neighbors=self.n_neighbors,
             min_shared_neighbors=self.min_shared_neighbors,

@@ -16,8 +16,8 @@ class GMMCovarianceType(Enum):
     TIED
         Tied covariance matrix.
     """
+
     FULL = "full"
     DIAG = "diag"
     SPHERICAL = "spherical"
     TIED = "tied"
-

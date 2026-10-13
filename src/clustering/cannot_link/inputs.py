@@ -43,14 +43,15 @@ class CannotLinkClusteringInputs:
         Returns
         -------
         CannotLinkClusteringInputs
-            The validated inputs.
+            The validated inputs, with X averaged with its transpose so that
+            floating-point asymmetry within tolerance is removed exactly.
 
         Raises
         ------
         ValueError
-            If X is not a square finite matrix, if negative_matrix does not share
-            X's shape, if negative_matrix is not symmetric, or if its diagonal
-            contains True.
+            If X is not a square, finite, non-negative, symmetric matrix, if
+            negative_matrix does not share X's shape, if negative_matrix is not
+            symmetric, or if its diagonal contains True.
         TypeError
             If negative_matrix is not a boolean array.
         """
@@ -58,6 +59,10 @@ class CannotLinkClusteringInputs:
             raise ValueError("X must be a square precomputed distance matrix")
         if not np.all(np.isfinite(X)):
             raise ValueError("X must contain only finite distances")
+        if np.any(X < 0):
+            raise ValueError("X must contain only non-negative distances")
+        if not np.allclose(X, X.T):
+            raise ValueError("X must be a symmetric distance matrix")
         if negative_matrix.shape != X.shape:
             raise ValueError("negative_matrix must have the same shape as X")
         if negative_matrix.dtype != np.bool_:
@@ -68,4 +73,5 @@ class CannotLinkClusteringInputs:
             raise ValueError(
                 "negative_matrix diagonal must be False; a point cannot be cannot-linked with itself"
             )
-        return cls(X=X, negative_matrix=negative_matrix)
+        symmetric_distances: NumericArray = (X + X.T) / 2
+        return cls(X=symmetric_distances, negative_matrix=negative_matrix)

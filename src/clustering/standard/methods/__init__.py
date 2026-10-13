@@ -46,4 +46,4 @@ __all__ = [
     "KMeansParameters",
     "SNNMetric",
     "SNNParameters",
-    ]
+]
