@@ -1,12 +1,14 @@
 from dataclasses import dataclass
+from typing import override
 
 from sklearn.cluster import KMeans
 
-from .initialization import KMeansInitialization
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import KMeansClusteringProcessor
+from .initialization import KMeansInitialization
+
 
 @dataclass
 class KMeansParameters(ClusteringParameter):
@@ -35,10 +37,10 @@ class KMeansParameters(ClusteringParameter):
     verbose: int = 0
     random_state: int | None = 114514
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self._validate_parameters()
 
-    def _validate_parameters(self):
+    def _validate_parameters(self) -> None:
         if self.n_clusters <= 0:
             raise ValueError("n_clusters must be greater than 0")
         if self.max_iter <= 0:
@@ -46,6 +48,7 @@ class KMeansParameters(ClusteringParameter):
         if self.tol <= 0:
             raise ValueError("tol must be greater than 0")
 
+    @override
     def build_processor(self) -> ClusteringProcessor:
         kmeans_processor = KMeans(
             n_clusters=self.n_clusters,

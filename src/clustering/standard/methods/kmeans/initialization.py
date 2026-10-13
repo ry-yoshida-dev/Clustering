@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class KMeansInitialization(Enum):
     """
     KMeansInitialization is the initialization method for the KMeans clustering algorithm.

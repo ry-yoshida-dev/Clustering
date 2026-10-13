@@ -1,12 +1,15 @@
 from dataclasses import dataclass
+from typing import override
+
 from sklearn.cluster import DBSCAN
 
-from .metric import DBSCANMetric
-from .algorithm import DBSCANAlgorithm
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import CommonClusteringProcessor
+from .algorithm import DBSCANAlgorithm
+from .metric import DBSCANMetric
+
 
 @dataclass
 class DBSCANParameters(ClusteringParameter):
@@ -32,10 +35,10 @@ class DBSCANParameters(ClusteringParameter):
     algorithm: DBSCANAlgorithm = DBSCANAlgorithm.AUTO
     leaf_size: int = 30
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self._validate_parameters()
 
-    def _validate_parameters(self):
+    def _validate_parameters(self) -> None:
         if self.eps <= 0:
             raise ValueError("eps must be greater than 0")
         if self.min_samples <= 0:
@@ -43,6 +46,7 @@ class DBSCANParameters(ClusteringParameter):
         if self.leaf_size <= 0:
             raise ValueError("leaf_size must be greater than 0")
 
+    @override
     def build_processor(self) -> ClusteringProcessor:
         dbscan_processor = DBSCAN(
             eps=self.eps,
@@ -55,18 +59,3 @@ class DBSCANParameters(ClusteringParameter):
             method=ClusteringMethod.DBSCAN,
             processor=dbscan_processor,
         )
-
-###########################
-
-if __name__ == "__main__":
-    import numpy as np
-    from scipy.spatial.distance import cdist
-    X = np.array([[1, 2], [1, 4], [1, 0], [4, 2], [4, 4], [4, 0]])
-    distance_matrix = cdist(X, X, metric='euclidean')
-    parameters = DBSCANParameters(
-        eps=0.5,
-        min_samples=2,
-        metric=DBSCANMetric.EUCLIDEAN,
-        algorithm=DBSCANAlgorithm.AUTO,
-        leaf_size=30,
-    )

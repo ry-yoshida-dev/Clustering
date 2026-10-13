@@ -10,7 +10,7 @@ from clustering import ClusteringLabels
 class TestClusteringLabels(unittest.TestCase):
     def test_empty_labels_raises(self) -> None:
         with self.assertRaises(ValueError):
-            ClusteringLabels([])
+            _ = ClusteringLabels([])
 
     def test_equality_and_copy_isolation(self) -> None:
         source = np.array([0, 1, 0], dtype=np.int64)
@@ -42,7 +42,7 @@ class TestClusteringLabels(unittest.TestCase):
     def test_get_indices_missing_label_raises(self) -> None:
         cl = ClusteringLabels([0, 0, 1])
         with self.assertRaises(ValueError):
-            cl.get_indices(99)
+            _ = cl.get_indices(99)
 
     def test_get_labels(self) -> None:
         cl = ClusteringLabels([0, 1, 2])
@@ -51,7 +51,7 @@ class TestClusteringLabels(unittest.TestCase):
     def test_get_labels_out_of_range_raises(self) -> None:
         cl = ClusteringLabels([0, 1, 2])
         with self.assertRaises(ValueError):
-            cl.get_labels([0, 3])
+            _ = cl.get_labels([0, 3])
 
     def test_get_mask(self) -> None:
         cl = ClusteringLabels([0, -1, 1], noise_label=-1)
@@ -90,4 +90,4 @@ class TestClusteringLabels(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()

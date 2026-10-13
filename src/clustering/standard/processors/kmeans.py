@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import override
 
+from ...result import ClusteringLabels
 from ...types import NumericArray
 from ..processor import ClusteringProcessor
-from ...result import ClusteringLabels
 from .protocols.kmeans import KMeansLike
 
 
@@ -21,6 +22,7 @@ class KMeansClusteringProcessor(ClusteringProcessor):
 
     processor: KMeansLike
 
+    @override
     def fit(
         self,
         X: NumericArray,
@@ -33,8 +35,9 @@ class KMeansClusteringProcessor(ClusteringProcessor):
         X: NumericArray
             The input data.
         """
-        self.processor.fit(X)
+        _ = self.processor.fit(X)
 
+    @override
     def predict(
         self,
         X: NumericArray,
@@ -54,6 +57,7 @@ class KMeansClusteringProcessor(ClusteringProcessor):
         """
         return ClusteringLabels(labels=self.processor.predict(X))
 
+    @override
     def fit_predict(
         self,
         X: NumericArray,
@@ -74,6 +78,7 @@ class KMeansClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=self.processor.fit_predict(X))
 
     @property
+    @override
     def labels(self) -> ClusteringLabels:
         """
         Get the clustering labels after fitting.
@@ -91,6 +96,7 @@ class KMeansClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=labels)
 
     @property
+    @override
     def is_precomputed_input_required(self) -> bool:
         """
         Check if the input data is precomputed.

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import override
 
+from ...result import ClusteringLabels
 from ...types import IntegerArray, NumericArray
 from ..processor import ClusteringProcessor
-from ...result import ClusteringLabels
 from .protocols.gmm import GaussianMixtureLike
 
 
@@ -24,6 +25,7 @@ class GMMClusteringProcessor(ClusteringProcessor):
     processor: GaussianMixtureLike
     labels_: IntegerArray | None = field(default=None, init=False)
 
+    @override
     def fit(
         self,
         X: NumericArray,
@@ -36,8 +38,9 @@ class GMMClusteringProcessor(ClusteringProcessor):
         X: NumericArray
             The input data.
         """
-        self.processor.fit(X)
+        _ = self.processor.fit(X)
 
+    @override
     def predict(
         self,
         X: NumericArray,
@@ -59,6 +62,7 @@ class GMMClusteringProcessor(ClusteringProcessor):
         self.labels_ = labels
         return ClusteringLabels(labels=labels)
 
+    @override
     def fit_predict(
         self,
         X: NumericArray,
@@ -81,6 +85,7 @@ class GMMClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=labels)
 
     @property
+    @override
     def labels(self) -> ClusteringLabels:
         """
         Get the clustering labels after fitting.
@@ -97,6 +102,7 @@ class GMMClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=self.labels_)
 
     @property
+    @override
     def is_precomputed_input_required(self) -> bool:
         """
         Check if the input data is precomputed.

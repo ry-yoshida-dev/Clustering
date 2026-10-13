@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class AgglomerativeLinkage(Enum):
     """
     AgglomerativeLinkage is a enum class for the linkage of the AgglomerativeClustering algorithm for scikit-learn.

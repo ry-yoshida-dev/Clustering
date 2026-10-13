@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import override
 
 import numpy as np
 
@@ -24,6 +25,7 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
 
     processor: ConstrainedAgglomerativeClustering
 
+    @override
     def fit(self, X: NumericArray, negative_matrix: NegativeMatrix) -> None:
         """
         Fit the cannot-link agglomerative clustering processor.
@@ -37,6 +39,7 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
         """
         self.processor.fit(X, negative_matrix)
 
+    @override
     def predict(self, X: NumericArray) -> ClusteringLabels:
         """
         Predict is not supported for this processor type.
@@ -54,6 +57,7 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
         """
         raise ValueError(f"predict() is not supported for {type(self.processor)}")
 
+    @override
     def fit_predict(
         self, X: NumericArray, negative_matrix: NegativeMatrix
     ) -> ClusteringLabels:
@@ -83,6 +87,7 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
         return ClusteringLabels(labels=raw_labels)
 
     @property
+    @override
     def labels(self) -> ClusteringLabels:
         """
         Get the clustering labels after fitting.
@@ -100,6 +105,7 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
         return ClusteringLabels(labels=labels)
 
     @property
+    @override
     def is_precomputed_input_required(self) -> bool:
         """
         Check if the input data must be a precomputed distance matrix.
@@ -116,7 +122,7 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
     def _verify_no_violations(
         raw_labels: IntegerArray, negative_matrix: NegativeMatrix
     ) -> None:
-        same_cluster = raw_labels[:, None] == raw_labels[None, :]
+        same_cluster = np.equal.outer(raw_labels, raw_labels)
         if np.any(same_cluster & negative_matrix):
             raise RuntimeError(
                 "cannot-link constraint violated in the clustering result; this indicates an internal invariant failure"

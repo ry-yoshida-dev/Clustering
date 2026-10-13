@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class AgglomerativeMetric(Enum):
     """
     AgglomerativeClusteringMetric is a enum class for the metric of the AgglomerativeClustering algorithm for scikit-learn.

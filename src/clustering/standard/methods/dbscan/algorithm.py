@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class DBSCANAlgorithm(Enum):
     """
     DBSCANAlgorithm is the algorithm of the DBSCAN algorithm for scikit-learn.

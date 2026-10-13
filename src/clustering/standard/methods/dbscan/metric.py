@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class DBSCANMetric(Enum):
     """
     DBSCANMetric is the metric of the DBSCAN algorithm for scikit-learn.

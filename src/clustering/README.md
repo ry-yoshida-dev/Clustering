@@ -8,7 +8,7 @@ This module provides a unified interface for clustering. `standard/` wraps sciki
 
 | Component | Description |
 |-----------|-------------|
-| [types.py](./types.py) | Shared type aliases (`NumericArray`, `IntegerArray`, `BoolArray`). |
+| [types.py](./types.py) | Shared type aliases (`NumericArray`, `FloatArray`, `IntegerArray`, `BoolArray`). |
 | [method.py](./method.py) | Enum defining available clustering methods (KMeans, Agglomerative, DBSCAN, HDBSCAN, GMM), shared by `standard/` and `cannot_link/`. |
 | [result.py](./result.py) | `ClusteringLabels`, the shared label result type. |
 | [standard/](./standard/README.md) | Unconstrained clustering: parameter classes, processors, and sklearn structural typing protocols. |

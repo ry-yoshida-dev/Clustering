@@ -3,24 +3,23 @@ from __future__ import annotations
 import unittest
 
 from clustering.standard.methods import HDBSCANParameters
-
 from tests.helpers import two_blobs
 
 
 class TestHDBSCANProcessor(unittest.TestCase):
     def test_parameter_validation(self) -> None:
         with self.assertRaises(ValueError):
-            HDBSCANParameters(min_cluster_size=0)
+            _ = HDBSCANParameters(min_cluster_size=0)
         with self.assertRaises(ValueError):
-            HDBSCANParameters(min_samples=0)
+            _ = HDBSCANParameters(min_samples=0)
         with self.assertRaises(ValueError):
-            HDBSCANParameters(leaf_size=0)
+            _ = HDBSCANParameters(leaf_size=0)
         with self.assertRaises(ValueError):
-            HDBSCANParameters(cluster_selection_epsilon=-1)
+            _ = HDBSCANParameters(cluster_selection_epsilon=-1)
         with self.assertRaises(ValueError):
-            HDBSCANParameters(max_cluster_size=0)
+            _ = HDBSCANParameters(max_cluster_size=0)
         with self.assertRaises(ValueError):
-            HDBSCANParameters(alpha=0)
+            _ = HDBSCANParameters(alpha=0)
 
     def test_fit_predict(self) -> None:
         x = two_blobs()
@@ -38,10 +37,10 @@ class TestHDBSCANProcessor(unittest.TestCase):
     def test_predict_not_supported(self) -> None:
         x = two_blobs()
         proc = HDBSCANParameters(min_cluster_size=5).build_processor()
-        proc.fit_predict(x)
+        _ = proc.fit_predict(x)
         with self.assertRaises(ValueError):
-            proc.predict(x)
+            _ = proc.predict(x)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()

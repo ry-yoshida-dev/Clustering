@@ -2,21 +2,18 @@ from __future__ import annotations
 
 import unittest
 
-import numpy as np
-
 from clustering.standard.methods import DBSCANMetric, DBSCANParameters
-
 from tests.helpers import two_blobs
 
 
 class TestDBSCANProcessor(unittest.TestCase):
     def test_parameter_validation(self) -> None:
         with self.assertRaises(ValueError):
-            DBSCANParameters(eps=0)
+            _ = DBSCANParameters(eps=0)
         with self.assertRaises(ValueError):
-            DBSCANParameters(min_samples=0)
+            _ = DBSCANParameters(min_samples=0)
         with self.assertRaises(ValueError):
-            DBSCANParameters(leaf_size=0)
+            _ = DBSCANParameters(leaf_size=0)
 
     def test_fit_predict(self) -> None:
         x = two_blobs()
@@ -35,9 +32,9 @@ class TestDBSCANProcessor(unittest.TestCase):
     def test_predict_not_supported(self) -> None:
         x = two_blobs()
         proc = DBSCANParameters(eps=1.5, min_samples=3).build_processor()
-        proc.fit_predict(x)
+        _ = proc.fit_predict(x)
         with self.assertRaises(ValueError):
-            proc.predict(x)
+            _ = proc.predict(x)
 
     def test_labels_before_fit_raises(self) -> None:
         proc = DBSCANParameters().build_processor()
@@ -52,4 +49,4 @@ class TestDBSCANProcessor(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()

@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import override
 
 from sklearn.cluster import (
-    AgglomerativeClustering,
     DBSCAN,
     HDBSCAN,
+    AgglomerativeClustering,
 )
 
+from ...result import ClusteringLabels
 from ...types import NumericArray
 from ..processor import ClusteringProcessor
-from ...result import ClusteringLabels
 from .protocols.common import CommonClusteringLike
 
 
@@ -30,6 +31,7 @@ class CommonClusteringProcessor(ClusteringProcessor):
 
     processor: CommonClusteringLike
 
+    @override
     def fit(
         self,
         X: NumericArray,
@@ -42,8 +44,9 @@ class CommonClusteringProcessor(ClusteringProcessor):
         X: NumericArray
             The input data.
         """
-        self.processor.fit(X)
+        _ = self.processor.fit(X)
 
+    @override
     def predict(
         self,
         X: NumericArray,
@@ -63,6 +66,7 @@ class CommonClusteringProcessor(ClusteringProcessor):
         """
         raise ValueError(f"predict() is not supported for {type(self.processor)}")
 
+    @override
     def fit_predict(
         self,
         X: NumericArray,
@@ -83,6 +87,7 @@ class CommonClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=self.processor.fit_predict(X))
 
     @property
+    @override
     def labels(self) -> ClusteringLabels:
         """
         Get the clustering labels after fitting.
@@ -100,6 +105,7 @@ class CommonClusteringProcessor(ClusteringProcessor):
         return ClusteringLabels(labels=labels)
 
     @property
+    @override
     def is_precomputed_input_required(self) -> bool:
         """
         Check if the input data must be a precomputed distance matrix.

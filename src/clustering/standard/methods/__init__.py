@@ -2,27 +2,27 @@ from .agglomerative import (
     AgglomerativeClusteringParameters,
     AgglomerativeLinkage,
     AgglomerativeMetric,
-    )
+)
 from .dbscan import (
     DBSCANAlgorithm,
     DBSCANMetric,
     DBSCANParameters,
-    )
+)
 from .gmm import (
-    GMMParameters,
     GMMCovarianceType,
-    )
+    GMMParameters,
+)
 from .hdbscan import (
     HDBSCANAlgorithm,
     HDBSCANClusterSelectionMethod,
     HDBSCANMetric,
     HDBSCANParameters,
     HDBSCANStoreCenters,
-    )
+)
 from .kmeans import (
-    KMeansParameters,
     KMeansInitialization,
-    )
+    KMeansParameters,
+)
 
 __all__ = [
     "AgglomerativeClusteringParameters",
@@ -31,13 +31,13 @@ __all__ = [
     "DBSCANAlgorithm",
     "DBSCANMetric",
     "DBSCANParameters",
-    "GMMParameters",
     "GMMCovarianceType",
+    "GMMParameters",
     "HDBSCANAlgorithm",
     "HDBSCANClusterSelectionMethod",
     "HDBSCANMetric",
     "HDBSCANParameters",
     "HDBSCANStoreCenters",
-    "KMeansParameters",
     "KMeansInitialization",
+    "KMeansParameters",
     ]

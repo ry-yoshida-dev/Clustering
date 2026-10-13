@@ -1,7 +1,7 @@
-from .parameter import KMeansParameters
 from .initialization import KMeansInitialization
+from .parameter import KMeansParameters
 
 __all__ = [
-    "KMeansParameters",
     "KMeansInitialization",
+    "KMeansParameters",
     ]

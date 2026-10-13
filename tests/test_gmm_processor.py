@@ -4,15 +4,14 @@ import unittest
 
 import numpy as np
 
-from clustering import GMMParameters, GMMCovarianceType
-
+from clustering import GMMCovarianceType, GMMParameters
 from tests.helpers import two_blobs
 
 
 class TestGMMProcessor(unittest.TestCase):
     def test_parameter_validation(self) -> None:
         with self.assertRaises(ValueError):
-            GMMParameters(n_components=0)
+            _ = GMMParameters(n_components=0)
 
     def test_fit_predict(self) -> None:
         x = two_blobs()
@@ -24,7 +23,7 @@ class TestGMMProcessor(unittest.TestCase):
     def test_predict_after_fit_predict(self) -> None:
         x = two_blobs()
         proc = GMMParameters(n_components=2, random_state=42).build_processor()
-        proc.fit_predict(x)
+        _ = proc.fit_predict(x)
         predicted = proc.predict(x[:5])
         self.assertEqual(predicted.labels.shape[0], 5)
 
@@ -34,7 +33,7 @@ class TestGMMProcessor(unittest.TestCase):
         proc.fit(x)
         with self.assertRaises(ValueError):
             _ = proc.labels
-        proc.predict(x)
+        _ = proc.predict(x)
         self.assertEqual(proc.labels.labels.shape[0], x.shape[0])
 
     def test_labels_before_fit_raises(self) -> None:
@@ -56,4 +55,4 @@ class TestGMMProcessor(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()

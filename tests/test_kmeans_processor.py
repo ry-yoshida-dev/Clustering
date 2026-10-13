@@ -5,18 +5,17 @@ import unittest
 import numpy as np
 
 from clustering import KMeansParameters
-
 from tests.helpers import two_blobs
 
 
 class TestKMeansProcessor(unittest.TestCase):
     def test_parameter_validation(self) -> None:
         with self.assertRaises(ValueError):
-            KMeansParameters(n_clusters=0)
+            _ = KMeansParameters(n_clusters=0)
         with self.assertRaises(ValueError):
-            KMeansParameters(max_iter=0)
+            _ = KMeansParameters(max_iter=0)
         with self.assertRaises(ValueError):
-            KMeansParameters(tol=0)
+            _ = KMeansParameters(tol=0)
 
     def test_fit_predict(self) -> None:
         x = two_blobs()
@@ -51,4 +50,4 @@ class TestKMeansProcessor(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()

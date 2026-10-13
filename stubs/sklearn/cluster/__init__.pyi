@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, Literal
+from typing import Literal
 
 import numpy as np
 from numpy.random import RandomState
@@ -16,8 +16,8 @@ class KMeans:
     copy_x: bool
     algorithm: Literal["lloyd", "elkan"]
 
-    cluster_centers_: NDArray[np.floating[Any]]
-    labels_: NDArray[np.integer[Any]] | None
+    cluster_centers_: NDArray[np.floating]
+    labels_: NDArray[np.integer] | None
     inertia_: float
     n_iter_: int
     n_features_in_: int
@@ -46,19 +46,19 @@ class KMeans:
         X: ArrayLike,
         y: ArrayLike | None = None,
         sample_weight: ArrayLike | None = None,
-    ) -> NDArray[np.integer[Any]]: ...
+    ) -> NDArray[np.integer]: ...
     def predict(
         self,
         X: ArrayLike,
         sample_weight: ArrayLike | None = None,
-    ) -> NDArray[np.integer[Any]]: ...
-    def transform(self, X: ArrayLike) -> NDArray[np.floating[Any]]: ...
+    ) -> NDArray[np.integer]: ...
+    def transform(self, X: ArrayLike) -> NDArray[np.floating]: ...
     def fit_transform(
         self,
         X: ArrayLike,
         y: ArrayLike | None = None,
         sample_weight: ArrayLike | None = None,
-    ) -> NDArray[np.floating[Any]]: ...
+    ) -> NDArray[np.floating]: ...
     def score(
         self,
         X: ArrayLike,
@@ -78,9 +78,9 @@ class DBSCAN:
     p: float | None
     n_jobs: int | None
 
-    core_sample_indices_: NDArray[np.integer[Any]]
-    components_: NDArray[np.floating[Any]]
-    labels_: NDArray[np.integer[Any]]
+    core_sample_indices_: NDArray[np.integer]
+    components_: NDArray[np.floating]
+    labels_: NDArray[np.integer]
     n_features_in_: int
 
     def __init__(
@@ -106,7 +106,7 @@ class DBSCAN:
         X: ArrayLike,
         y: ArrayLike | None = None,
         sample_weight: ArrayLike | None = None,
-    ) -> NDArray[np.integer[Any]]: ...
+    ) -> NDArray[np.integer]: ...
     def get_params(self, deep: bool = True) -> dict[str, object]: ...
     def set_params(self, **params: object) -> DBSCAN: ...
 
@@ -120,12 +120,12 @@ class AgglomerativeClustering:
     distance_threshold: float | None
     compute_distances: bool
 
-    labels_: NDArray[np.integer[Any]]
+    labels_: NDArray[np.integer]
     n_clusters_: int
     n_leaves_: int
     n_connected_components_: int
-    children_: NDArray[np.integer[Any]]
-    distances_: NDArray[np.floating[Any]] | None
+    children_: NDArray[np.integer]
+    distances_: NDArray[np.floating] | None
     n_features_in_: int
 
     def __init__(
@@ -141,7 +141,7 @@ class AgglomerativeClustering:
         compute_distances: bool = False,
     ) -> None: ...
     def fit(self, X: ArrayLike, y: ArrayLike | None = None) -> AgglomerativeClustering: ...
-    def fit_predict(self, X: ArrayLike, y: ArrayLike | None = None) -> NDArray[np.integer[Any]]: ...
+    def fit_predict(self, X: ArrayLike, y: ArrayLike | None = None) -> NDArray[np.integer]: ...
     def get_params(self, deep: bool = True) -> dict[str, object]: ...
     def set_params(self, **params: object) -> AgglomerativeClustering: ...
 
@@ -161,10 +161,10 @@ class HDBSCAN:
     store_centers: Literal["centroid", "medoid", "both"] | None
     copy: bool | Literal["warn"]
 
-    labels_: NDArray[np.integer[Any]]
-    probabilities_: NDArray[np.floating[Any]]
-    centroids_: NDArray[np.floating[Any]]
-    medoids_: NDArray[np.floating[Any]]
+    labels_: NDArray[np.integer]
+    probabilities_: NDArray[np.floating]
+    centroids_: NDArray[np.floating]
+    medoids_: NDArray[np.floating]
     n_features_in_: int
 
     def __init__(
@@ -185,6 +185,6 @@ class HDBSCAN:
         copy: bool | Literal["warn"] = "warn",
     ) -> None: ...
     def fit(self, X: ArrayLike, y: ArrayLike | None = None) -> HDBSCAN: ...
-    def fit_predict(self, X: ArrayLike, y: ArrayLike | None = None) -> NDArray[np.integer[Any]]: ...
+    def fit_predict(self, X: ArrayLike, y: ArrayLike | None = None) -> NDArray[np.integer]: ...
     def get_params(self, deep: bool = True) -> dict[str, object]: ...
     def set_params(self, **params: object) -> HDBSCAN: ...

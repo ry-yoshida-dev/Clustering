@@ -1,7 +1,7 @@
-from .parameter import GMMParameters
 from .covaiance_type import GMMCovarianceType
+from .parameter import GMMParameters
 
 __all__ = [
-    "GMMParameters",
     "GMMCovarianceType",
+    "GMMParameters",
     ]

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class GMMCovarianceType(Enum):
     """
     Covariance type for Gaussian Mixture Model for scikit-learn.

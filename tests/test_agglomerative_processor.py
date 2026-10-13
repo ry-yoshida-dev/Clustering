@@ -5,26 +5,29 @@ import unittest
 import numpy as np
 from scipy.spatial.distance import cdist
 
-from clustering import AgglomerativeClusteringParameters, AgglomerativeLinkage, AgglomerativeMetric
-
+from clustering import (
+    AgglomerativeClusteringParameters,
+    AgglomerativeLinkage,
+    AgglomerativeMetric,
+)
 from tests.helpers import two_blobs
 
 
 class TestAgglomerativeProcessor(unittest.TestCase):
     def test_parameter_validation(self) -> None:
         with self.assertRaises(ValueError):
-            AgglomerativeClusteringParameters(n_clusters=0, distance_threshold=None)
+            _ = AgglomerativeClusteringParameters(n_clusters=0, distance_threshold=None)
         with self.assertRaises(ValueError):
-            AgglomerativeClusteringParameters(
+            _ = AgglomerativeClusteringParameters(
                 n_clusters=None,
                 distance_threshold=0,
             )
         with self.assertRaises(ValueError):
-            AgglomerativeClusteringParameters(n_clusters=None, distance_threshold=None)
+            _ = AgglomerativeClusteringParameters(n_clusters=None, distance_threshold=None)
         with self.assertRaises(ValueError):
-            AgglomerativeClusteringParameters(n_clusters=2, distance_threshold=0.5)
+            _ = AgglomerativeClusteringParameters(n_clusters=2, distance_threshold=0.5)
         with self.assertRaises(ValueError):
-            AgglomerativeClusteringParameters(
+            _ = AgglomerativeClusteringParameters(
                 n_clusters=2,
                 distance_threshold=None,
                 metric=AgglomerativeMetric.COSINE,
@@ -64,10 +67,10 @@ class TestAgglomerativeProcessor(unittest.TestCase):
             metric=AgglomerativeMetric.EUCLIDEAN,
             linkage=AgglomerativeLinkage.COMPLETE,
         ).build_processor()
-        proc.fit_predict(x)
+        _ = proc.fit_predict(x)
         with self.assertRaises(ValueError):
-            proc.predict(x)
+            _ = proc.predict(x)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    _ = unittest.main()

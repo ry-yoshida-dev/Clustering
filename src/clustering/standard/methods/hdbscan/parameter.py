@@ -1,16 +1,16 @@
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, override
 
 from sklearn.cluster import HDBSCAN
 
-from .algorithm import HDBSCANAlgorithm
-from .cluster_selection_method import HDBSCANClusterSelectionMethod
-from .metric import HDBSCANMetric
-from .store_centers import HDBSCANStoreCenters
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
 from ...processors import CommonClusteringProcessor
+from .algorithm import HDBSCANAlgorithm
+from .cluster_selection_method import HDBSCANClusterSelectionMethod
+from .metric import HDBSCANMetric
+from .store_centers import HDBSCANStoreCenters
 
 
 @dataclass
@@ -60,6 +60,7 @@ class HDBSCANParameters(ClusteringParameter):
         if self.alpha <= 0:
             raise ValueError("alpha must be greater than 0")
 
+    @override
     def build_processor(self) -> ClusteringProcessor:
         hdbscan_processor: HDBSCAN = HDBSCAN(
             min_cluster_size=self.min_cluster_size,
@@ -83,18 +84,3 @@ class HDBSCANParameters(ClusteringParameter):
             method=ClusteringMethod.HDBSCAN,
             processor=hdbscan_processor,
         )
-
-
-if __name__ == "__main__":
-    import numpy as np
-
-    X = np.array([[1, 2], [1, 4], [1, 0], [4, 2], [4, 4], [4, 0]])
-    parameters = HDBSCANParameters(
-        min_cluster_size=2,
-        min_samples=1,
-        metric=HDBSCANMetric.EUCLIDEAN,
-        copy=True,
-    )
-    proc = parameters.build_processor()
-    proc.fit_predict(X)
-    print(proc.labels)

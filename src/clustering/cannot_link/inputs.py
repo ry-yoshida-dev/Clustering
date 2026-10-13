@@ -29,7 +29,7 @@ class CannotLinkClusteringInputs:
         cls,
         X: NumericArray,
         negative_matrix: NegativeMatrix,
-    ) -> "CannotLinkClusteringInputs":
+    ) -> CannotLinkClusteringInputs:
         """
         Validate a distance matrix and cannot-link mask before clustering.
 

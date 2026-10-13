@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import override
 
 from ....method import ClusteringMethod
 from ....standard.methods.agglomerative.linkage import AgglomerativeLinkage
@@ -44,6 +45,7 @@ class CannotLinkAgglomerativeClusteringParameters(CannotLinkClusteringParameter)
                 + "clustering; it requires Euclidean feature vectors rather than a precomputed distance matrix"
             )
 
+    @override
     def build_processor(self) -> CannotLinkClusteringProcessor:
         algorithm = ConstrainedAgglomerativeClustering(
             linkage=self.linkage,

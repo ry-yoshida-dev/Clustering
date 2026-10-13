@@ -34,4 +34,7 @@ where = ["src"]
 stubPath = "stubs"
 
 [tool.mypy]
-mypy_path = "stubs"
+mypy_path = "stubs:src"
+files = ["src", "tests"]
+explicit_package_bases = true
+strict = true

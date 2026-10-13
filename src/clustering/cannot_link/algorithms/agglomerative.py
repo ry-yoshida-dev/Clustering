@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from ...standard.methods.agglomerative.linkage import AgglomerativeLinkage
-from ...types import IntegerArray, NumericArray
+from ...types import BoolArray, FloatArray, IntegerArray, NumericArray
 from ..inputs import CannotLinkClusteringInputs
 from ..types import NegativeMatrix
 
@@ -117,13 +117,13 @@ class ConstrainedAgglomerativeClustering:
         IntegerArray
             Cluster label per point.
         """
-        self.fit(X, negative_matrix)
-        assert self.labels_ is not None
-        return self.labels_
+        labels = self._run(X, negative_matrix)
+        self.labels_ = labels
+        return labels
 
     def _run(self, X: NumericArray, negative_matrix: NegativeMatrix) -> IntegerArray:
         inputs = CannotLinkClusteringInputs.validate(X, negative_matrix)
-        n = inputs.X.shape[0]
+        n = len(inputs.X)
         dist = inputs.X.astype(np.float64, copy=True)
         np.fill_diagonal(dist, np.inf)
         forbidden = inputs.negative_matrix.copy()
@@ -171,11 +171,13 @@ class ConstrainedAgglomerativeClustering:
         current: int,
         dist: NumericArray,
         forbidden: NegativeMatrix,
-        active: NegativeMatrix,
+        active: BoolArray,
     ) -> tuple[int | None, float]:
-        eligible_row = np.where(active & ~forbidden[current], dist[current], np.inf)
+        eligible_row: FloatArray = np.where(
+            active & ~forbidden[current, :], dist[current, :], np.inf
+        )
         neighbor = int(np.argmin(eligible_row))
-        distance = float(eligible_row[neighbor])
+        distance = float(eligible_row.item(neighbor))
         if not np.isfinite(distance):
             return None, np.inf
         return neighbor, distance
@@ -187,17 +189,19 @@ class ConstrainedAgglomerativeClustering:
         dist: NumericArray,
         forbidden: NegativeMatrix,
         size: IntegerArray,
-        active: NegativeMatrix,
+        active: BoolArray,
     ) -> None:
-        new_row = self._merge_row(dist[a], dist[b], int(size[a]), int(size[b]))
+        size_a = size.item(a)
+        size_b = size.item(b)
+        new_row = self._merge_row(dist[a, :], dist[b, :], size_a, size_b)
 
         dist[a, :] = new_row
         dist[:, a] = new_row
         dist[a, a] = np.inf
-        forbidden_row = forbidden[a] | forbidden[b]
+        forbidden_row = forbidden[a, :] | forbidden[b, :]
         forbidden[a, :] = forbidden_row
         forbidden[:, a] = forbidden_row
-        size[a] += size[b]
+        size[a] = size_a + size_b
         active[b] = False
 
     @staticmethod
@@ -205,9 +209,9 @@ class ConstrainedAgglomerativeClustering:
         resolved = np.empty(n, dtype=np.int64)
         for point in range(n):
             index = point
-            while root[index] != index:
-                root[index] = root[root[index]]
-                index = root[index]
+            while root.item(index) != index:
+                root[index] = root.item(root.item(index))
+                index = root.item(index)
             resolved[point] = index
         _, labels = np.unique(resolved, return_inverse=True)
         return labels.astype(np.int64)
