@@ -23,6 +23,10 @@ from .kmeans import (
     KMeansInitialization,
     KMeansParameters,
 )
+from .snn import (
+    SNNMetric,
+    SNNParameters,
+)
 
 __all__ = [
     "AgglomerativeClusteringParameters",
@@ -40,4 +44,6 @@ __all__ = [
     "HDBSCANStoreCenters",
     "KMeansInitialization",
     "KMeansParameters",
+    "SNNMetric",
+    "SNNParameters",
     ]

@@ -14,8 +14,9 @@ class CommonClusteringProcessor(ClusteringProcessor):
     """
     Wraps sklearn cluster estimators that share fit and fit_predict only.
 
-    Used for AgglomerativeClustering, DBSCAN, HDBSCAN, and similar estimators. predict is
-    not supported at the sklearn level for these models in this wrapper.
+    Used for AgglomerativeClustering, DBSCAN, HDBSCAN, SharedNearestNeighborClustering,
+    and similar estimators. predict is not supported at the sklearn level for these
+    models in this wrapper.
 
     Attributes:
     ----------

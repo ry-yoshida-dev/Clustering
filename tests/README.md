@@ -15,6 +15,7 @@ Unit tests for the `clustering` package: label utilities, parameter validation, 
 | [`test_dbscan_processor.py`](test_dbscan_processor.py) | Tests for DBSCAN parameters and processor API. |
 | [`test_hdbscan_processor.py`](test_hdbscan_processor.py) | Tests for HDBSCAN parameters and processor API. |
 | [`test_agglomerative_processor.py`](test_agglomerative_processor.py) | Tests for agglomerative parameters and processor API. |
+| [`test_snn_processor.py`](test_snn_processor.py) | Tests for shared nearest neighbor parameters, graph construction, and processor API. |
 | [`test_cannot_link_agglomerative_processor.py`](test_cannot_link_agglomerative_processor.py) | Tests for cannot-link constrained agglomerative parameters and processor API. |
 
 ## Examples

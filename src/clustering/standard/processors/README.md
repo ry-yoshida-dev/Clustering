@@ -8,7 +8,7 @@ Concrete `ClusteringProcessor` implementations that wrap scikit-learn cluster es
 
 | Component | Description |
 |-----------|-------------|
-| [common.py](./common.py) | `CommonClusteringProcessor` for estimators with `fit` and `fit_predict` only (Agglomerative, DBSCAN, HDBSCAN). |
+| [common.py](./common.py) | `CommonClusteringProcessor` for estimators with `fit` and `fit_predict` only (Agglomerative, DBSCAN, HDBSCAN, SNN). |
 | [gmm.py](./gmm.py) | `GMMClusteringProcessor` wrapping `GaussianMixture` with `fit`, `predict`, and `fit_predict`. |
 | [kmeans.py](./kmeans.py) | `KMeansClusteringProcessor` wrapping `KMeans` with full fit/predict support. |
 | [protocols/common.py](./protocols/common.py) | `CommonClusteringLike` structural type for common processors. |

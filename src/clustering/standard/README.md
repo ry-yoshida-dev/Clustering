@@ -2,7 +2,7 @@
 
 ## Overview
 
-Unconstrained clustering: parameter dataclasses build `ClusteringProcessor` instances with `fit`, `fit_predict`, and (where supported) `predict`, wrapping scikit-learn estimators (K-Means, Agglomerative Clustering, DBSCAN, HDBSCAN, GMM).
+Unconstrained clustering: parameter dataclasses build `ClusteringProcessor` instances with `fit`, `fit_predict`, and (where supported) `predict`, wrapping scikit-learn estimators (K-Means, Agglomerative Clustering, DBSCAN, HDBSCAN, GMM) and from-scratch algorithms for methods sklearn lacks (shared nearest neighbor clustering).
 
 ## Components
 
@@ -11,7 +11,8 @@ Unconstrained clustering: parameter dataclasses build `ClusteringProcessor` inst
 | [parameter.py](./parameter.py) | Abstract base class for clustering parameters. |
 | [processor.py](./processor.py) | Abstract base class for clustering processors with unified interface (fit, predict, fit_predict). |
 | [processors/](./processors/README.md) | Concrete implementations of clustering processors and sklearn structural typing protocols. |
-| [methods/](./methods/README.md) | Parameter classes and enums for specific clustering methods (K-Means, Agglomerative, DBSCAN, HDBSCAN, GMM). |
+| [methods/](./methods/README.md) | Parameter classes and enums for specific clustering methods (K-Means, Agglomerative, DBSCAN, HDBSCAN, GMM, SNN). |
+| [algorithms/](./algorithms/README.md) | From-scratch clustering algorithms not provided by sklearn (shared nearest neighbor clustering). |
 
 ## Examples
 

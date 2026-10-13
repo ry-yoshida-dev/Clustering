@@ -11,9 +11,11 @@ class ClusteringMethod(Enum):
         DBSCAN: DBSCAN clustering.
         HDBSCAN: HDBSCAN clustering.
         GMM: GMM clustering.
+        SNN: Shared nearest neighbor clustering.
     """
     KMEANS = "KMeans"
     AGGLOMERATIVE = "Agglomerative"
     DBSCAN = "DBSCAN"
     HDBSCAN = "HDBSCAN"
     GMM = "GMM"
+    SNN = "SNN"

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides parameter classes and enums for specific clustering methods, including K-Means, Agglomerative Clustering, and Gaussian Mixture Models (GMM).
+This module provides parameter classes and enums for specific clustering methods, including K-Means, Agglomerative Clustering, Gaussian Mixture Models (GMM), and shared nearest neighbor (SNN) clustering.
 
 ## Components
 
@@ -11,3 +11,4 @@ This module provides parameter classes and enums for specific clustering methods
 | [kmeans/](./kmeans/) | K-Means clustering parameters and initialization methods. |
 | [agglomerative/](./agglomerative/) | Agglomerative clustering parameters, linkage methods, and distance metrics. |
 | [gmm/](./gmm/) | Gaussian Mixture Model parameters and covariance types. |
+| [snn/](./snn/README.md) | Shared nearest neighbor clustering parameters and distance metrics. |

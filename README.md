@@ -4,7 +4,7 @@
 
 Clustering (`clustering`) is a Python package that wraps scikit-learn cluster estimators behind a small, consistent API: parameter dataclasses build `ClusteringProcessor` instances with `fit`, `fit_predict`, and (where supported) `predict`.
 
-Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, and Gaussian mixture models. Method-specific options live under `clustering.methods`.
+Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. Method-specific options live under `clustering.methods`.
 
 For module-level design notes, see [src/clustering/README.md](src/clustering/README.md).
 
