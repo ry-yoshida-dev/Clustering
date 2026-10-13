@@ -13,28 +13,26 @@ from .types import BoolArray
 @dataclass(frozen=True)
 class ClusteringLabels:
     """
-    ClusteringLabels is the labels of the clustering result.
+    Immutable cluster labels produced by a clustering run.
 
-    Attributes:
+    Attributes
     ----------
-    labels: NDArray[np.int64]
-        The labels as a 1-D int64 array (owning buffer; safe to use in NumPy ops).
-    noise_label: int
+    noise_label : int
         The label value used for noise / unassigned points.
+    labels : NDArray[np.int64]
+        The labels as a read-only 1-D int64 array owned by this instance.
     """
 
     noise_label: int = -1
     labels: NDArray[np.int64] = field(init=False, repr=True)
 
     def __init__(self, labels: ArrayLike, noise_label: int = -1) -> None:
-        raw: object = labels
-        if isinstance(raw, tuple):
-            raw = cast(object, raw[0])
-        arr = np.asarray(raw, dtype=np.int64).ravel()
-        if arr.size == 0:
+        owned_labels = np.array(labels, dtype=np.int64).ravel()
+        if owned_labels.size == 0:
             raise ValueError("labels must not be empty")
+        owned_labels.setflags(write=False)
         object.__setattr__(self, "noise_label", noise_label)
-        object.__setattr__(self, "labels", arr.copy())
+        object.__setattr__(self, "labels", owned_labels)
 
     @override
     def __eq__(self, other: object) -> bool:
@@ -44,15 +42,19 @@ class ClusteringLabels:
             np.array_equal(self.labels, other.labels)
         )
 
+    @override
+    def __hash__(self) -> int:
+        return hash((self.noise_label, self.labels.tobytes()))
+
     @property
     def is_in_noise(self) -> bool:
         """
-        Check if the label is in the noise.
+        Check whether any point carries the noise label.
 
-        Returns:
-        ----------
+        Returns
+        -------
         bool
-            True if the label is in the noise, False otherwise.
+            True if at least one point is labeled as noise.
         """
         return self.num_noise > 0
 
@@ -63,95 +65,91 @@ class ClusteringLabels:
         """
         Get the number of clusters.
 
-        Parameters:
+        Parameters
         ----------
-        is_noise_allowed: bool
-            Whether to allow noise labels in the number of clusters calculation.
+        is_noise_allowed : bool
+            Whether to count the noise label as a cluster.
 
-        Returns:
-        ----------
+        Returns
+        -------
         int
             The number of clusters.
         """
-        if is_noise_allowed:
+        if is_noise_allowed or not self.is_in_noise:
             return len(self.set_labels)
-        if self.is_in_noise:
-            return len(self.set_labels) - 1
-        return len(self.set_labels)
+        return len(self.set_labels) - 1
 
     @property
     def set_labels(self) -> list[int]:
         """
-        Get the set of labels.
+        Get the sorted unique labels.
 
-        Returns:
-        ----------
+        Returns
+        -------
         list[int]
-            The set of labels.
+            The sorted unique labels.
         """
         return cast(list[int], np.unique(self.labels).tolist())
 
     @property
     def num_noise(self) -> int:
         """
-        Get the number of noise labels.
+        Get the number of points labeled as noise.
 
-        Returns:
-        ----------
+        Returns
+        -------
         int
-            The number of noise labels.
+            The number of noise points.
         """
         return int(np.count_nonzero(np.equal(self.labels, self.noise_label)))
 
     @property
     def num_not_noise_labels(self) -> int:
         """
-        Get the number of not noise labels.
+        Get the number of points not labeled as noise.
 
-        Returns:
-        ----------
+        Returns
+        -------
         int
-            The number of not noise labels.
+            The number of non-noise points.
         """
         return int(np.count_nonzero(np.not_equal(self.labels, self.noise_label)))
 
     @property
     def expanded_labels(self) -> list[int]:
         """
-        Get the expanded labels.
-        Noise labels are assigned the next available label.
+        Get the labels with each noise point assigned its own new label.
 
-        Returns:
-        ----------
+        Returns
+        -------
         list[int]
-            The unique labels.
+            The labels, where noise points receive consecutive labels after the
+            current maximum label.
         """
-        new_labels = self.labels.copy()
-        noise_mask = self.get_mask(self.noise_label)
-        if self.num_noise > 0:
-            max_label = int(np.max(new_labels))
-            new_labels[noise_mask] = np.arange(
+        expanded = self.labels.copy()
+        if self.is_in_noise:
+            max_label = int(np.max(expanded))
+            expanded[self.get_mask(self.noise_label)] = np.arange(
                 max_label + 1, max_label + 1 + self.num_noise, dtype=np.int64
             )
-        return cast(list[int], new_labels.tolist())
+        return cast(list[int], expanded.tolist())
 
     def get_cluster_counts(
         self,
-        include_noise: bool = False,
+        is_noise_included: bool = False,
     ) -> dict[int, int]:
         """
-        Get the cluster counts.
+        Get the number of points per label, largest first.
 
-        Parameters:
+        Parameters
         ----------
-        include_noise: bool
-            Whether to include noise labels.
+        is_noise_included : bool
+            Whether to include the noise label.
 
-        Returns:
-        ----------
+        Returns
+        -------
         dict[int, int]
-            The dictionary of cluster counts.
-            The keys are the labels and the values are the counts.
+            Mapping from label to point count, ordered by descending count.
         """
         unique, counts_arr = np.unique(self.labels, return_counts=True)
         unique_list = cast(list[int], unique.tolist())
@@ -161,9 +159,11 @@ class ClusteringLabels:
             key=lambda pair: pair[1],
             reverse=True,
         )
-        if not include_noise:
+        if not is_noise_included:
             sorted_counts = [
-                (label, count) for (label, count) in sorted_counts if label != self.noise_label
+                (label, count)
+                for (label, count) in sorted_counts
+                if label != self.noise_label
             ]
         return dict(sorted_counts)
 
@@ -173,56 +173,78 @@ class ClusteringLabels:
         is_empty_allowed: bool = False,
     ) -> list[int]:
         """
-        Get the indices of the label.
+        Get the indices of the points carrying a label.
 
-        Parameters:
+        Parameters
         ----------
-        label: int
-            The label to get the indices of.
-        is_empty_allowed: bool
-            Whether to allow empty indices.
+        label : int
+            The label to look up.
+        is_empty_allowed : bool
+            Whether to return an empty list instead of raising when the label
+            does not occur.
+
+        Returns
+        -------
+        list[int]
+            The indices of the points carrying the label.
+
+        Raises
+        ------
+        ValueError
+            If the label does not occur and is_empty_allowed is False.
         """
-        indices = np.where(np.equal(self.labels, label))[0]
-        if len(indices) == 0 and not is_empty_allowed:
+        indices: list[int] = np.flatnonzero(self.get_mask(label)).tolist()
+        if not indices and not is_empty_allowed:
             raise ValueError(
                 f"label: {label} not found. If you want to allow empty indices, set is_empty_allowed to True."
             )
-        return indices.tolist()
+        return indices
 
     def get_labels(
         self,
         indices: list[int],
     ) -> list[int]:
         """
-        Get the labels of the indices.
+        Get the labels at the given indices.
 
-        Parameters:
+        Parameters
         ----------
-        indices: list[int]
-            The indices to get the labels of.
+        indices : list[int]
+            The indices to look up; each must be in the range [0, len(self)).
+
+        Returns
+        -------
+        list[int]
+            The labels at the given indices.
+
+        Raises
+        ------
+        IndexError
+            If any index is outside the range [0, len(self)).
         """
-        max_index = max(indices)
-        if max_index >= len(self):
-            raise ValueError(f"index: {max_index} is out of range")
-        labels_list = cast(list[int], self.labels.tolist())
-        return [labels_list[i] for i in indices]
+        out_of_range = [index for index in indices if not 0 <= index < len(self)]
+        if out_of_range:
+            raise IndexError(
+                f"indices: {out_of_range} are out of range for {len(self)} labels"
+            )
+        return cast(list[int], self.labels[indices].tolist())
 
     def get_mask(
         self,
         label: int,
     ) -> BoolArray:
         """
-        Get the mask of the label.
+        Get the boolean mask of the points carrying a label.
 
-        Parameters:
+        Parameters
         ----------
-        label: int
-            The label to get the mask of.
+        label : int
+            The label to look up.
 
-        Returns:
-        ----------
+        Returns
+        -------
         BoolArray
-            The mask of the label with shape (n,).
+            The mask with shape (n,).
         """
         return np.equal(self.labels, label)
 
@@ -231,21 +253,27 @@ class ClusteringLabels:
         min_count: int,
     ) -> list[int]:
         """
-        Get the major labels.
+        Get the non-noise labels with at least a minimum number of points.
 
-        Parameters:
+        Parameters
         ----------
-        min_count: int
-            The minimum count of the label to be considered as a major label.
+        min_count : int
+            The minimum point count for a label to be considered major.
+
+        Returns
+        -------
+        list[int]
+            The major labels, ordered by descending count.
         """
         counts = self.get_cluster_counts()
-        major_labels = [label for label, count in counts.items() if count >= min_count]
-        return major_labels
+        return [label for label, count in counts.items() if count >= min_count]
 
-    def __array__(self, dtype: DTypeLike | None = None) -> NDArray[np.generic]:
+    def __array__(
+        self, dtype: DTypeLike | None = None, copy: bool | None = None
+    ) -> NDArray[np.generic]:
         if dtype is None:
-            return self.labels
-        return self.labels.astype(dtype, copy=False)
+            return self.labels.copy() if copy else self.labels
+        return self.labels.astype(dtype, copy=bool(copy))
 
     def __iter__(self) -> Iterator[int]:
         return iter(cast(list[int], self.labels.tolist()))
@@ -260,14 +288,14 @@ class ClusteringLabels:
         """
         Get the label at the given index.
 
-        Parameters:
+        Parameters
         ----------
-        index: int
-            The index to get the label at.
+        index : int
+            The index to look up.
 
-        Returns:
-        ----------
+        Returns
+        -------
         int
             The label at the given index.
         """
-        return cast(list[int], self.labels.tolist())[index]
+        return self.labels.item(index)

@@ -1,9 +1,7 @@
-from .common import CommonClusteringProcessor
-from .gmm import GMMClusteringProcessor
-from .kmeans import KMeansClusteringProcessor
+from .inductive import InductiveClusteringProcessor
+from .transductive import TransductiveClusteringProcessor
 
 __all__ = [
-    "CommonClusteringProcessor",
-    "GMMClusteringProcessor",
-    "KMeansClusteringProcessor",
+    "InductiveClusteringProcessor",
+    "TransductiveClusteringProcessor",
 ]

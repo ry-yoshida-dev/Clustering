@@ -2,15 +2,12 @@
 
 ## Overview
 
-Concrete `ClusteringProcessor` implementations that wrap scikit-learn cluster estimators behind a unified API. Each processor pairs with a matching protocol module under [protocols/](./protocols/).
+Concrete `ClusteringProcessor` implementations that wrap cluster estimators behind a unified API. Each processor pairs with a matching protocol module under [protocols/](./protocols/).
 
 ## Components
 
 | Component | Description |
 |-----------|-------------|
-| [common.py](./common.py) | `CommonClusteringProcessor` for estimators with `fit` and `fit_predict` only (Agglomerative, DBSCAN, HDBSCAN, SNN). |
-| [gmm.py](./gmm.py) | `GMMClusteringProcessor` wrapping `GaussianMixture` with `fit`, `predict`, and `fit_predict`. |
-| [kmeans.py](./kmeans.py) | `KMeansClusteringProcessor` wrapping `KMeans` with full fit/predict support. |
-| [protocols/common.py](./protocols/common.py) | `CommonClusteringLike` structural type for common processors. |
-| [protocols/gmm.py](./protocols/gmm.py) | `GaussianMixtureLike` structural type for GMM. |
-| [protocols/kmeans.py](./protocols/kmeans.py) | `KMeansLike` structural type for KMeans. |
+| [transductive.py](./transductive.py) | `TransductiveClusteringProcessor` for estimators that only label their training data (Agglomerative, DBSCAN, HDBSCAN, SNN). |
+| [inductive.py](./inductive.py) | `InductiveClusteringProcessor` for estimators that can also `predict` unseen data (KMeans, GMM). |
+| [protocols/](./protocols/README.md) | Structural types for the wrapped estimators. |

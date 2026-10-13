@@ -6,7 +6,7 @@ from sklearn.cluster import HDBSCAN
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
-from ...processors import CommonClusteringProcessor
+from ...processors import TransductiveClusteringProcessor
 from .algorithm import HDBSCANAlgorithm
 from .cluster_selection_method import HDBSCANClusterSelectionMethod
 from .metric import HDBSCANMetric
@@ -23,7 +23,7 @@ class HDBSCANParameters(ClusteringParameter):
 
     ``metric`` is restricted to :class:`HDBSCANMetric`; for a custom callable
     metric, construct ``sklearn.cluster.HDBSCAN`` directly and wrap it with
-    :class:`CommonClusteringProcessor`.
+    :class:`TransductiveClusteringProcessor`.
     """
 
     min_cluster_size: int = 5
@@ -80,7 +80,7 @@ class HDBSCANParameters(ClusteringParameter):
             ),
             copy=self.copy,
         )
-        return CommonClusteringProcessor(
+        return TransductiveClusteringProcessor(
             method=ClusteringMethod.HDBSCAN,
             processor=hdbscan_processor,
             is_precomputed_metric=self.metric == HDBSCANMetric.PRECOMPUTED,

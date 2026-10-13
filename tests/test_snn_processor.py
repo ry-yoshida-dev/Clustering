@@ -5,6 +5,7 @@ from unittest import mock
 
 import numpy as np
 from scipy.spatial.distance import cdist
+from sklearn.exceptions import NotFittedError
 from sklearn.neighbors import NearestNeighbors
 
 from clustering import ClusteringMethod
@@ -90,7 +91,7 @@ class TestSNNProcessor(unittest.TestCase):
 
     def test_labels_before_fit_raises(self) -> None:
         proc = SNNParameters().build_processor()
-        with self.assertRaises(ValueError):
+        with self.assertRaises(NotFittedError):
             _ = proc.labels
 
     def test_predict_not_supported(self) -> None:

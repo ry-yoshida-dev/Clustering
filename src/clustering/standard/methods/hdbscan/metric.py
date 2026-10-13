@@ -9,10 +9,14 @@ class HDBSCANMetric(Enum):
     HDBSCAN supports additional metrics via scipy/sklearn.
     If you want to use other metrics, please update this enum class.
 
-    Attributes:
-        EUCLIDEAN: Euclidean distance
-        MANHATTAN: Manhattan distance
-        PRECOMPUTED: Precomputed distance matrix
+    Attributes
+    ----------
+    EUCLIDEAN
+        Euclidean distance
+    MANHATTAN
+        Manhattan distance
+    PRECOMPUTED
+        Precomputed distance matrix
     """
 
     EUCLIDEAN = "euclidean"

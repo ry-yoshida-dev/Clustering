@@ -11,14 +11,21 @@ from .types import NegativeMatrix
 
 @dataclass
 class CannotLinkClusteringProcessor(ABC):
+    """
+    Unified interface for clustering under hard cannot-link constraints.
+
+    Attributes
+    ----------
+    method : ClusteringMethod
+        The clustering method this processor implements.
+    """
+
     method: ClusteringMethod
 
     @abstractmethod
     def fit(self, X: NumericArray, negative_matrix: NegativeMatrix) -> None:
         """
-        Fit the cannot-link clustering processor.
-        Fit function does not return labels(we can get labels from labels_ property).
-        -> Usually, fit_predict() is used.
+        Fit the cannot-link clustering processor; read the result via labels.
 
         Parameters
         ----------

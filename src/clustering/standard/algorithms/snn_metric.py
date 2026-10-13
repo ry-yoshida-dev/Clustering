@@ -9,11 +9,16 @@ class SNNMetric(Enum):
     sklearn.neighbors.NearestNeighbors supports additional metrics.
     If you want to use other metrics, please update this enum class.
 
-    Attributes:
-        EUCLIDEAN: Euclidean distance
-        MANHATTAN: Manhattan distance
-        COSINE: Cosine distance
-        PRECOMPUTED: Precomputed distance matrix
+    Attributes
+    ----------
+    EUCLIDEAN
+        Euclidean distance
+    MANHATTAN
+        Manhattan distance
+    COSINE
+        Cosine distance
+    PRECOMPUTED
+        Precomputed distance matrix
     """
 
     EUCLIDEAN = "euclidean"

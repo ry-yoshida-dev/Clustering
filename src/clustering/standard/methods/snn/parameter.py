@@ -5,7 +5,7 @@ from ....method import ClusteringMethod
 from ...algorithms import SharedNearestNeighborClustering, SNNMetric
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
-from ...processors import CommonClusteringProcessor
+from ...processors import TransductiveClusteringProcessor
 
 
 @dataclass
@@ -15,15 +15,15 @@ class SNNParameters(ClusteringParameter):
 
     Attributes
     ----------
-    n_neighbors: int
+    n_neighbors : int
         Size k of each point's nearest neighbor list.
-    min_shared_neighbors: int
+    min_shared_neighbors : int
         Minimum number of shared nearest neighbors for two mutual neighbors to
         be strongly linked. Must be in the range [0, n_neighbors).
-    min_samples: int
+    min_samples : int
         Minimum number of strong links for a point to be a core point. Must be
         in the range [1, n_neighbors].
-    metric: SNNMetric
+    metric : SNNMetric
         Distance metric used to find nearest neighbors.
     """
 
@@ -48,7 +48,7 @@ class SNNParameters(ClusteringParameter):
             min_samples=self.min_samples,
             metric=self.metric,
         )
-        return CommonClusteringProcessor(
+        return TransductiveClusteringProcessor(
             method=ClusteringMethod.SNN,
             processor=algorithm,
             is_precomputed_metric=self.metric == SNNMetric.PRECOMPUTED,

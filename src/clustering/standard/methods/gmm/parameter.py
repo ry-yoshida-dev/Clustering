@@ -6,8 +6,8 @@ from sklearn.mixture import GaussianMixture
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
-from ...processors import GMMClusteringProcessor
-from .covaiance_type import GMMCovarianceType
+from ...processors import InductiveClusteringProcessor
+from .covariance_type import GMMCovarianceType
 
 
 @dataclass
@@ -15,13 +15,13 @@ class GMMParameters(ClusteringParameter):
     """
     GMMParameters is the parameters for the GMM clustering algorithm.
 
-    Attributes:
+    Attributes
     ----------
-    n_components: int
+    n_components : int
         The number of components in the GMM.
-    covariance_type: GMMCovarianceType
+    covariance_type : GMMCovarianceType
         The covariance type for the GMM.
-    random_state: int | None
+    random_state : int | None
         The random state for the GMM.
     """
     n_components: int = 2
@@ -42,7 +42,7 @@ class GMMParameters(ClusteringParameter):
             covariance_type=self.covariance_type.value,
             random_state=self.random_state,
             )
-        return GMMClusteringProcessor(
+        return InductiveClusteringProcessor(
             method=ClusteringMethod.GMM,
             processor=gmm_processor,
         )

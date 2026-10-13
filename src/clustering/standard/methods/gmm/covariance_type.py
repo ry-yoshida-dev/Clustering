@@ -5,15 +5,15 @@ class GMMCovarianceType(Enum):
     """
     Covariance type for Gaussian Mixture Model for scikit-learn.
 
-    Parameters:
+    Attributes
     ----------
-    FULL:
+    FULL
         Full covariance matrix.
-    DIAG:
+    DIAG
         Diagonal covariance matrix.
-    SPHERICAL:
+    SPHERICAL
         Spherical covariance matrix.
-    TIED:
+    TIED
         Tied covariance matrix.
     """
     FULL = "full"

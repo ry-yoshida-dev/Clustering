@@ -3,8 +3,11 @@ from __future__ import annotations
 import unittest
 
 import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.exceptions import NotFittedError
 
-from clustering import KMeansParameters
+from clustering import KMeansInitialization, KMeansParameters
+from clustering.standard.processors import InductiveClusteringProcessor
 from tests.helpers import two_blobs
 
 
@@ -41,8 +44,14 @@ class TestKMeansProcessor(unittest.TestCase):
 
     def test_labels_before_fit_raises(self) -> None:
         proc = KMeansParameters(n_clusters=2).build_processor()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(NotFittedError):
             _ = proc.labels
+
+    def test_initialization_is_forwarded(self) -> None:
+        proc = KMeansParameters(init=KMeansInitialization.RANDOM).build_processor()
+        assert isinstance(proc, InductiveClusteringProcessor)
+        assert isinstance(proc.processor, KMeans)
+        self.assertEqual(proc.processor.init, "random")
 
     def test_is_precomputed_input_required_is_false(self) -> None:
         proc = KMeansParameters(n_clusters=2).build_processor()

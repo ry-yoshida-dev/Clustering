@@ -1,73 +1,98 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from sklearn.exceptions import NotFittedError
 
 from ..method import ClusteringMethod
 from ..result import ClusteringLabels
-from ..types import NumericArray
+from ..types import IntegerArray, NumericArray
 
 
 @dataclass
 class ClusteringProcessor(ABC):
-    method: ClusteringMethod
+    """
+    Unified interface over a fitted-on-demand clustering estimator.
 
-    @abstractmethod
+    Subclasses provide the raw label computation; this base class caches the
+    labels of the last fit so that ``labels`` is available after either ``fit``
+    or ``fit_predict``.
+
+    Attributes
+    ----------
+    method : ClusteringMethod
+        The clustering method this processor implements.
+    """
+
+    method: ClusteringMethod
+    _fitted_labels: ClusteringLabels | None = field(
+        default=None, init=False, repr=False
+    )
+
     def fit(self, X: NumericArray) -> None:
         """
-        Fit the clustering processor.
-        Fit function does not return labels(we can get labels from labels_ property).
-        -> Usually, fit_predict() is used.
+        Fit the clustering processor and cache the training labels.
 
-        Parameters:
+        Parameters
         ----------
-        X: NumericArray
+        X : NumericArray
             The input data.
         """
+        _ = self.fit_predict(X)
+
+    def fit_predict(self, X: NumericArray) -> ClusteringLabels:
+        """
+        Fit the clustering processor and return the training labels.
+
+        Parameters
+        ----------
+        X : NumericArray
+            The input data.
+
+        Returns
+        -------
+        ClusteringLabels
+            The clustering labels of the training data.
+        """
+        fitted_labels = ClusteringLabels(labels=self._fit_predict_labels(X))
+        self._fitted_labels = fitted_labels
+        return fitted_labels
+
+    @property
+    def labels(self) -> ClusteringLabels:
+        """
+        Get the clustering labels of the training data from the last fit.
+
+        Returns
+        -------
+        ClusteringLabels
+            The clustering labels.
+
+        Raises
+        ------
+        NotFittedError
+            If neither fit nor fit_predict has been called yet.
+        """
+        if self._fitted_labels is None:
+            raise NotFittedError(
+                "Processor is not fitted yet. Call fit() or fit_predict() first."
+            )
+        return self._fitted_labels
 
     @abstractmethod
     def predict(self, X: NumericArray) -> ClusteringLabels:
         """
         Predict the clustering labels for new data.
-        Predict function is implemented in KMeans and GMM.
 
-        Parameters:
+        Parameters
         ----------
-        X: NumericArray
+        X : NumericArray
             The input data.
 
-        Returns:
-        ----------
-        ClusteringLabels:
-            The clustering labels.
-        """
-
-    @abstractmethod
-    def fit_predict(self, X: NumericArray) -> ClusteringLabels:
-        """
-        Fit the clustering processor and predict the clustering labels.
-
-        Parameters:
-        ----------
-        X: NumericArray
-            The input data.
-
-        Returns:
-        ----------
-        ClusteringLabels:
-            The clustering labels.
-        """
-
-    @property
-    @abstractmethod
-    def labels(self) -> ClusteringLabels:
-        """
-        Get the clustering labels after fitting.
-        If the processor is not fitted yet, it will raise an error.
-
-        Returns:
-        ----------
-        ClusteringLabels:
+        Returns
+        -------
+        ClusteringLabels
             The clustering labels.
         """
 
@@ -75,10 +100,13 @@ class ClusteringProcessor(ABC):
     @abstractmethod
     def is_precomputed_input_required(self) -> bool:
         """
-        Check if the input data is precomputed.
+        Check if the input data must be a precomputed distance matrix.
 
-        Returns:
-        ----------
+        Returns
+        -------
         bool
-            True if the input data is precomputed, False otherwise.
+            True if the input data must be a precomputed distance matrix.
         """
+
+    @abstractmethod
+    def _fit_predict_labels(self, X: NumericArray) -> IntegerArray: ...

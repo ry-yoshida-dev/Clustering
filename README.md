@@ -4,7 +4,7 @@
 
 Clustering (`clustering`) is a Python package that wraps scikit-learn cluster estimators behind a small, consistent API: parameter dataclasses build `ClusteringProcessor` instances with `fit`, `fit_predict`, and (where supported) `predict`.
 
-Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. Method-specific options live under `clustering.methods`.
+Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. All parameter classes and enums are exported from the top-level `clustering` package.
 
 For module-level design notes, see [src/clustering/README.md](src/clustering/README.md).
 
@@ -43,10 +43,10 @@ result = proc.fit_predict(X)
 print(result.labels)
 ```
 
-DBSCAN and related parameter types are imported from `clustering.methods`:
+Density-based methods label noise points with `-1`:
 
 ```python
-from clustering.methods import DBSCANParameters
+from clustering import DBSCANParameters
 
 proc = DBSCANParameters(eps=0.5, min_samples=5).build_processor()
 labels = proc.fit_predict(X)
@@ -54,5 +54,13 @@ labels = proc.fit_predict(X)
 
 ## Notes
 
-- `fit_predict` and `labels` return `ClusteringLabels`, which wraps a 1-D `numpy.int64` vector (`ClusteringLabels.labels`).
-- Estimators that do not support `predict` in sklearn (for example DBSCAN / HDBSCAN in this wrapper) will not implement meaningful `predict` on the processor either; use `fit_predict` on the training data.
+- `fit_predict` and `labels` return `ClusteringLabels`, an immutable wrapper around a read-only 1-D `numpy.int64` vector (`ClusteringLabels.labels`).
+- `labels` returns the training labels of the last `fit` / `fit_predict`; reading it before fitting raises `sklearn.exceptions.NotFittedError`.
+- Only K-Means and GMM support `predict` on unseen data. Agglomerative, DBSCAN, HDBSCAN, and SNN raise `ValueError` from `predict`; use `fit_predict` on the training data.
+
+## Development
+
+```bash
+uv run --with pytest pytest
+uv run --with mypy mypy
+```

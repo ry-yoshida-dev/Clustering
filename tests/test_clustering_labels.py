@@ -50,8 +50,31 @@ class TestClusteringLabels(unittest.TestCase):
 
     def test_get_labels_out_of_range_raises(self) -> None:
         cl = ClusteringLabels([0, 1, 2])
-        with self.assertRaises(ValueError):
+        with self.assertRaises(IndexError):
             _ = cl.get_labels([0, 3])
+        with self.assertRaises(IndexError):
+            _ = cl.get_labels([-1])
+
+    def test_get_labels_empty_indices(self) -> None:
+        cl = ClusteringLabels([0, 1, 2])
+        self.assertEqual(cl.get_labels([]), [])
+
+    def test_labels_are_read_only(self) -> None:
+        cl = ClusteringLabels([0, 1, 2])
+        with self.assertRaises(ValueError):
+            np.asarray(cl)[0] = 9
+        with self.assertRaises(ValueError):
+            cl.labels[0] = 9
+        self.assertEqual(list(cl), [0, 1, 2])
+
+    def test_tuple_input_is_a_sequence(self) -> None:
+        cl = ClusteringLabels((0, 1, 2))
+        self.assertEqual(list(cl), [0, 1, 2])
+
+    def test_hashable(self) -> None:
+        self.assertEqual(
+            hash(ClusteringLabels([0, 1])), hash(ClusteringLabels([0, 1]))
+        )
 
     def test_get_mask(self) -> None:
         cl = ClusteringLabels([0, -1, 1], noise_label=-1)
@@ -60,8 +83,8 @@ class TestClusteringLabels(unittest.TestCase):
 
     def test_get_cluster_counts(self) -> None:
         cl = ClusteringLabels([0, -1, 0, 1], noise_label=-1)
-        with_noise = cl.get_cluster_counts(include_noise=True)
-        without_noise = cl.get_cluster_counts(include_noise=False)
+        with_noise = cl.get_cluster_counts(is_noise_included=True)
+        without_noise = cl.get_cluster_counts(is_noise_included=False)
         self.assertEqual(with_noise, {0: 2, 1: 1, -1: 1})
         self.assertEqual(without_noise, {0: 2, 1: 1})
 

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import unittest
 
+from sklearn.exceptions import NotFittedError
+
 from clustering.standard.methods import DBSCANMetric, DBSCANParameters
 from tests.helpers import two_blobs
 
@@ -38,7 +40,7 @@ class TestDBSCANProcessor(unittest.TestCase):
 
     def test_labels_before_fit_raises(self) -> None:
         proc = DBSCANParameters().build_processor()
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(NotFittedError):
             _ = proc.labels
 
     def test_is_precomputed_input_required(self) -> None:

@@ -20,7 +20,6 @@ dependencies = [
     "numpy",
     "scikit-learn",
     "scipy",
-    "typing_extensions",
 ]
 
 [project.urls]
@@ -38,3 +37,7 @@ mypy_path = "stubs:src"
 files = ["src", "tests"]
 explicit_package_bases = true
 strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src"]

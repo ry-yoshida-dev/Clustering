@@ -6,7 +6,7 @@ from sklearn.cluster import KMeans
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
-from ...processors import KMeansClusteringProcessor
+from ...processors import InductiveClusteringProcessor
 from .initialization import KMeansInitialization
 
 
@@ -15,19 +15,19 @@ class KMeansParameters(ClusteringParameter):
     """
     KMeansParameters is the parameters for the KMeans clustering algorithm.
 
-    Attributes:
+    Attributes
     ----------
-    n_clusters: int
+    n_clusters : int
         The number of clusters.
-    init: KMeansInitialization
+    init : KMeansInitialization
         The initialization method for the KMeans clustering algorithm.
-    max_iter: int
+    max_iter : int
         The maximum number of iterations for the KMeans clustering algorithm.
-    tol: float
+    tol : float
         The tolerance for the KMeans clustering algorithm.
-    verbose: int
+    verbose : int
         The verbosity level for the KMeans clustering algorithm.
-    random_state: int | None
+    random_state : int | None
         The random state for the KMeans clustering algorithm.
     """
     n_clusters: int = 2
@@ -52,12 +52,13 @@ class KMeansParameters(ClusteringParameter):
     def build_processor(self) -> ClusteringProcessor:
         kmeans_processor = KMeans(
             n_clusters=self.n_clusters,
+            init=self.init.value,
             max_iter=self.max_iter,
             tol=self.tol,
             verbose=self.verbose,
             random_state=self.random_state,
         )
-        return KMeansClusteringProcessor(
+        return InductiveClusteringProcessor(
             method=ClusteringMethod.KMEANS,
             processor=kmeans_processor,
         )

@@ -6,7 +6,7 @@ from sklearn.cluster import AgglomerativeClustering
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
-from ...processors import CommonClusteringProcessor
+from ...processors import TransductiveClusteringProcessor
 from .linkage import AgglomerativeLinkage
 from .metric import AgglomerativeMetric
 
@@ -16,15 +16,15 @@ class AgglomerativeClusteringParameters(ClusteringParameter):
     """
     AgglomerativeClusteringParameters is the parameters for the Agglomerative Clustering algorithm.
 
-    Attributes:
+    Attributes
     ----------
-    n_clusters: int | None
+    n_clusters : int | None
         The number of clusters.
-    distance_threshold: float | None
+    distance_threshold : float | None
         The distance threshold for the Agglomerative Clustering algorithm.
-    metric: AgglomerativeMetric
+    metric : AgglomerativeMetric
         The metric for the Agglomerative Clustering algorithm.
-    linkage: AgglomerativeLinkage
+    linkage : AgglomerativeLinkage
         The linkage for the Agglomerative Clustering algorithm.
     """
     n_clusters: int | None = None
@@ -55,7 +55,7 @@ class AgglomerativeClusteringParameters(ClusteringParameter):
             distance_threshold=self.distance_threshold,
             linkage=self.linkage.value
             )
-        return CommonClusteringProcessor(
+        return TransductiveClusteringProcessor(
             method=ClusteringMethod.AGGLOMERATIVE,
             processor=agglomerative_processor,
             is_precomputed_metric=self.metric == AgglomerativeMetric.PRECOMPUTED,

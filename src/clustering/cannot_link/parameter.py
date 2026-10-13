@@ -6,6 +6,9 @@ if TYPE_CHECKING:
 
 
 class CannotLinkClusteringParameter(ABC):
+    """
+    Base class for cannot-link clustering parameters that build a processor.
+    """
 
     @abstractmethod
     def build_processor(self) -> "CannotLinkClusteringProcessor":

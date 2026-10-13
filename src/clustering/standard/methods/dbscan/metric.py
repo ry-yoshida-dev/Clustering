@@ -9,10 +9,14 @@ class DBSCANMetric(Enum):
     There are another metrics for DBSCAN algorithm.
     If you want to use other metrics, please update this enum class.
 
-    Attributes:
-        EUCLIDEAN: Euclidean distance
-        MANHATTAN: Manhattan distance
-        PRECOMPUTED: Precomputed distance
+    Attributes
+    ----------
+    EUCLIDEAN
+        Euclidean distance
+    MANHATTAN
+        Manhattan distance
+    PRECOMPUTED
+        Precomputed distance
     """
     EUCLIDEAN = "euclidean"
     MANHATTAN = "manhattan"

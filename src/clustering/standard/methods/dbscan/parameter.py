@@ -6,7 +6,7 @@ from sklearn.cluster import DBSCAN
 from ....method import ClusteringMethod
 from ...parameter import ClusteringParameter
 from ...processor import ClusteringProcessor
-from ...processors import CommonClusteringProcessor
+from ...processors import TransductiveClusteringProcessor
 from .algorithm import DBSCANAlgorithm
 from .metric import DBSCANMetric
 
@@ -16,17 +16,17 @@ class DBSCANParameters(ClusteringParameter):
     """
     DBSCANParameters is the parameters for the DBSCAN clustering algorithm.
 
-    Attributes:
+    Attributes
     ----------
-    eps: float
+    eps : float
         The epsilon value for the DBSCAN algorithm.
-    min_samples: int
+    min_samples : int
         The minimum number of samples in a cluster.
-    metric: DBSCANMetric
+    metric : DBSCANMetric
         The metric for the DBSCAN algorithm.
-    algorithm: DBSCANAlgorithm
+    algorithm : DBSCANAlgorithm
         The algorithm for the DBSCAN algorithm.
-    leaf_size: int
+    leaf_size : int
         The leaf size for the DBSCAN algorithm.
     """
     eps: float = 0.5
@@ -55,7 +55,7 @@ class DBSCANParameters(ClusteringParameter):
             algorithm=self.algorithm.value,
             leaf_size=self.leaf_size,
             )
-        return CommonClusteringProcessor(
+        return TransductiveClusteringProcessor(
             method=ClusteringMethod.DBSCAN,
             processor=dbscan_processor,
             is_precomputed_metric=self.metric == DBSCANMetric.PRECOMPUTED,

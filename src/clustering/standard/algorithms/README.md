@@ -2,7 +2,7 @@
 
 ## Overview
 
-From-scratch clustering algorithms for methods that scikit-learn does not provide. Each algorithm exposes the sklearn-style `fit` / `fit_predict` / `labels_` surface so that `CommonClusteringProcessor` can wrap it like any sklearn estimator. Algorithms depend only on shared types, never on `methods/` or `processors/`.
+From-scratch clustering algorithms for methods that scikit-learn does not provide. Each algorithm exposes the sklearn-style `fit` / `fit_predict` / `labels_` surface so that `TransductiveClusteringProcessor` can wrap it like any sklearn estimator. Algorithms depend only on shared types, never on `methods/` or `processors/`.
 
 ## Components
 

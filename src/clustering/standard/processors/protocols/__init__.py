@@ -1,9 +1,7 @@
-from .common import CommonClusteringLike
-from .gmm import GaussianMixtureLike
-from .kmeans import KMeansLike
+from .inductive import InductiveClusteringLike
+from .transductive import TransductiveClusteringLike
 
 __all__ = [
-    "CommonClusteringLike",
-    "GaussianMixtureLike",
-    "KMeansLike",
+    "InductiveClusteringLike",
+    "TransductiveClusteringLike",
 ]

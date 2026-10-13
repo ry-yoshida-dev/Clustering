@@ -22,9 +22,9 @@ class CannotLinkAgglomerativeClusteringParameters(CannotLinkClusteringParameter)
 
     Attributes
     ----------
-    distance_threshold: float
+    distance_threshold : float
         The distance threshold above which merging stops.
-    linkage: AgglomerativeLinkage
+    linkage : AgglomerativeLinkage
         The linkage criterion for the constrained agglomerative clustering
         algorithm. WARD is rejected because it requires Euclidean feature
         vectors rather than a precomputed distance matrix.

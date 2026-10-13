@@ -1,4 +1,4 @@
-from .covaiance_type import GMMCovarianceType
+from .covariance_type import GMMCovarianceType
 from .parameter import GMMParameters
 
 __all__ = [

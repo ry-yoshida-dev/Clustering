@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import override
 
 import numpy as np
+from sklearn.exceptions import NotFittedError
 
 from ...result import ClusteringLabels
 from ...types import IntegerArray, NumericArray
@@ -96,10 +97,15 @@ class CannotLinkAgglomerativeProcessor(CannotLinkClusteringProcessor):
         -------
         ClusteringLabels
             The clustering labels.
+
+        Raises
+        ------
+        NotFittedError
+            If neither fit nor fit_predict has been called yet.
         """
         labels = self.processor.labels_
         if labels is None:
-            raise ValueError(
+            raise NotFittedError(
                 "Processor is not fitted yet. Call fit() or fit_predict() first."
             )
         return ClusteringLabels(labels=labels)
