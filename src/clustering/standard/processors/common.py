@@ -3,12 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import override
 
-from sklearn.cluster import (
-    DBSCAN,
-    HDBSCAN,
-    AgglomerativeClustering,
-)
-
 from ...result import ClusteringLabels
 from ...types import NumericArray
 from ..processor import ClusteringProcessor
@@ -27,9 +21,12 @@ class CommonClusteringProcessor(ClusteringProcessor):
     ----------
     processor: CommonClusteringLike
         The underlying sklearn estimator (structural type).
+    is_precomputed_metric: bool
+        Whether the estimator is configured with a precomputed distance metric.
     """
 
     processor: CommonClusteringLike
+    is_precomputed_metric: bool
 
     @override
     def fit(
@@ -113,17 +110,6 @@ class CommonClusteringProcessor(ClusteringProcessor):
         Returns:
         ----------
         bool:
-            True when the metric is precomputed (AgglomerativeClustering, DBSCAN, or HDBSCAN).
+            True when the estimator is configured with a precomputed distance metric.
         """
-        from ..methods.agglomerative.metric import AgglomerativeMetric
-        from ..methods.dbscan.metric import DBSCANMetric
-        from ..methods.hdbscan.metric import HDBSCANMetric
-
-        if isinstance(self.processor, AgglomerativeClustering):
-            return AgglomerativeMetric(self.processor.metric) == AgglomerativeMetric.PRECOMPUTED
-        if isinstance(self.processor, DBSCAN):
-            return DBSCANMetric(self.processor.metric) == DBSCANMetric.PRECOMPUTED
-        if isinstance(self.processor, HDBSCAN):
-            return HDBSCANMetric(self.processor.metric) == HDBSCANMetric.PRECOMPUTED
-
-        return False
+        return self.is_precomputed_metric

@@ -58,4 +58,5 @@ class DBSCANParameters(ClusteringParameter):
         return CommonClusteringProcessor(
             method=ClusteringMethod.DBSCAN,
             processor=dbscan_processor,
+            is_precomputed_metric=self.metric == DBSCANMetric.PRECOMPUTED,
         )

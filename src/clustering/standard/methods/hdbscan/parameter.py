@@ -83,4 +83,5 @@ class HDBSCANParameters(ClusteringParameter):
         return CommonClusteringProcessor(
             method=ClusteringMethod.HDBSCAN,
             processor=hdbscan_processor,
+            is_precomputed_metric=self.metric == HDBSCANMetric.PRECOMPUTED,
         )

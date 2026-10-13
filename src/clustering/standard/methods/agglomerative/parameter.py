@@ -58,4 +58,5 @@ class AgglomerativeClusteringParameters(ClusteringParameter):
         return CommonClusteringProcessor(
             method=ClusteringMethod.AGGLOMERATIVE,
             processor=agglomerative_processor,
+            is_precomputed_metric=self.metric == AgglomerativeMetric.PRECOMPUTED,
         )
