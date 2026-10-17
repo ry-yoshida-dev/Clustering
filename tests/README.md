@@ -2,7 +2,7 @@
 
 ## Overview
 
-Unit tests for the `clustering` package: label utilities, parameter validation, and end-to-end processor behavior for all supported clustering methods, both unconstrained (`clustering.standard`) and cannot-link constrained (`clustering.cannot_link`).
+Unit tests for the `clustering` package: label utilities, parameter validation, and end-to-end processor behavior for all supported clustering methods, both unconstrained (`clustering.standard`) and cannot-link constrained (`clustering.cannot_link`), plus distance re-ranking (`clustering.reranking`).
 
 ## Components
 
@@ -17,6 +17,7 @@ Unit tests for the `clustering` package: label utilities, parameter validation, 
 | [`test_agglomerative_processor.py`](test_agglomerative_processor.py) | Tests for agglomerative parameters and processor API. |
 | [`test_snn_processor.py`](test_snn_processor.py) | Tests for shared nearest neighbor parameters, graph construction, and processor API. |
 | [`test_cannot_link_agglomerative_processor.py`](test_cannot_link_agglomerative_processor.py) | Tests for cannot-link constrained agglomerative parameters and processor API. |
+| [`test_k_reciprocal_reranker.py`](test_k_reciprocal_reranker.py) | Tests for k-reciprocal re-ranking output properties, agreement with a loop implementation of the same algorithm (global max scaling, self ranked first), validation, and neighbor sets. |
 
 ## Examples
 

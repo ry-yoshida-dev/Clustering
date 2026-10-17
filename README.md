@@ -4,7 +4,7 @@
 
 Clustering (`clustering`) is a Python package that wraps scikit-learn cluster estimators behind a small, consistent API: parameter dataclasses build `ClusteringProcessor` instances with `fit` and `fit_predict`; processors for methods that can label unseen data also offer `predict`.
 
-Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. All parameter classes and enums are exported from the top-level `clustering` package.
+Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. `KReciprocalReranker` refines pairwise distances with k-reciprocal re-ranking before clustering with a precomputed metric. All parameter classes, rerankers, and enums are exported from the top-level `clustering` package.
 
 For module-level design notes, see [src/clustering/README.md](src/clustering/README.md).
 
@@ -44,6 +44,18 @@ from clustering import DBSCANParameters
 
 proc = DBSCANParameters(eps=0.5, min_samples=5).build_processor()
 labels = proc.fit_predict(X)
+```
+
+Re-rank distances first, then cluster them as a precomputed matrix:
+
+```python
+from clustering import DBSCANMetric, KReciprocalReranker
+
+distances = KReciprocalReranker(n_reciprocal_neighbors=20).rerank(X)
+proc = DBSCANParameters(
+    eps=0.6, min_samples=4, metric=DBSCANMetric.PRECOMPUTED
+).build_processor()
+labels = proc.fit_predict(distances)
 ```
 
 ## Notes

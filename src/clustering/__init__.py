@@ -5,6 +5,7 @@ from .cannot_link import (
 )
 from .linkage import AgglomerativeLinkage
 from .method import ClusteringMethod
+from .reranking import KReciprocalMetric, KReciprocalReranker
 from .result import ClusteringLabels
 from .standard import (
     AgglomerativeClusteringParameters,
@@ -50,6 +51,8 @@ __all__ = [
     "HDBSCANStoreCenters",
     "KMeansInitialization",
     "KMeansParameters",
+    "KReciprocalMetric",
+    "KReciprocalReranker",
     "SNNMetric",
     "SNNParameters",
 ]
