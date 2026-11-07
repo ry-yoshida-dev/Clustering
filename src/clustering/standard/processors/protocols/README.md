@@ -2,7 +2,7 @@
 
 ## Overview
 
-Structural typing protocols for wrapped cluster estimators. Each file mirrors the corresponding processor module and provides stable method signatures where sklearn type stubs are incomplete.
+Structural types for the wrapped cluster estimators, one per processor module.
 
 ## Components
 

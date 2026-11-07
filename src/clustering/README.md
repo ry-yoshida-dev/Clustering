@@ -2,16 +2,16 @@
 
 ## Overview
 
-This module provides a unified interface for clustering. `standard/` wraps scikit-learn clustering algorithms (K-Means, Agglomerative Clustering, DBSCAN, HDBSCAN, and Gaussian Mixture Models) and adds shared nearest neighbor (SNN) clustering. `cannot_link/` adds cannot-link constrained clustering, where a boolean pair matrix marks points that must not end up in the same cluster; only methods that fit a precomputed-distance-matrix architecture are supported there. `reranking/` refines pairwise distances (k-reciprocal re-ranking) into a precomputed distance matrix for those methods. `method.py`, `linkage.py`, `result.py`, and `types.py` at this level are shared across these subpackages.
+Unified clustering interface. `standard/` covers unconstrained clustering, `cannot_link/` clustering where marked pairs of points must not share a cluster, and `reranking/` distance refinement that feeds precomputed-distance methods.
 
 ## Components
 
 | Component | Description |
 |-----------|-------------|
 | [types.py](./types.py) | Shared type aliases (`NumericArray`, `FloatArray`, `IntegerArray`, `BoolArray`). |
-| [method.py](./method.py) | Enum defining available clustering methods (KMeans, Agglomerative, DBSCAN, HDBSCAN, GMM, SNN), shared by `standard/` and `cannot_link/`. |
-| [linkage.py](./linkage.py) | `AgglomerativeLinkage` enum, shared by standard and cannot-link agglomerative clustering. |
+| [method.py](./method.py) | `ClusteringMethod` enum of available clustering methods. |
+| [linkage.py](./linkage.py) | `AgglomerativeLinkage` enum of linkage criteria. |
 | [result.py](./result.py) | `ClusteringLabels`, the shared label result type. |
-| [standard/](./standard/README.md) | Unconstrained clustering: parameter classes, processors, and sklearn structural typing protocols. |
-| [cannot_link/](./cannot_link/README.md) | Cannot-link constrained clustering: parameter classes, processors, and the underlying algorithms. |
-| [reranking/](./reranking/README.md) | Distance re-ranking (k-reciprocal) producing precomputed distance matrices for clustering. |
+| [standard/](./standard/README.md) | Unconstrained clustering. |
+| [cannot_link/](./cannot_link/README.md) | Cannot-link constrained clustering. |
+| [reranking/](./reranking/README.md) | Distance re-ranking into precomputed distance matrices. |

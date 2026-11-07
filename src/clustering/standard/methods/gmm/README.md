@@ -8,7 +8,7 @@ Parameters for scikit-learn `GaussianMixture`. The resulting processor supports 
 
 | Component | Description |
 |-----------|-------------|
-| [parameter.py](./parameter.py) | `GMMParameters` (`n_components`, `covariance_type`, `random_state`). |
+| [parameter.py](./parameter.py) | `GMMParameters`. |
 | [covariance_type.py](./covariance_type.py) | `GMMCovarianceType` enum. |
 
 ## Examples

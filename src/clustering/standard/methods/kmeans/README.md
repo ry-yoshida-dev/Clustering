@@ -8,7 +8,7 @@ Parameters for scikit-learn `KMeans`. The resulting processor supports `predict`
 
 | Component | Description |
 |-----------|-------------|
-| [parameter.py](./parameter.py) | `KMeansParameters` (`n_clusters`, `init`, `max_iter`, `tol`, `verbose`, `random_state`). |
+| [parameter.py](./parameter.py) | `KMeansParameters`. |
 | [initialization.py](./initialization.py) | `KMeansInitialization` enum (k-means++, random). |
 
 ## Examples

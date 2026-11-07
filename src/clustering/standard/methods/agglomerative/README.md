@@ -2,7 +2,7 @@
 
 ## Overview
 
-Parameters for scikit-learn `AgglomerativeClustering`. Exactly one stopping criterion must be set: `n_clusters` or `distance_threshold` (both default to `None`). The default metric is `AgglomerativeMetric.PRECOMPUTED`, which clusters a square distance matrix; pass `AgglomerativeMetric.EUCLIDEAN` for feature vectors (required by ward linkage). The linkage enum `AgglomerativeLinkage` lives in the shared [linkage.py](../../../linkage.py) and is re-exported here.
+Parameters for scikit-learn `AgglomerativeClustering`, stopping at either `n_clusters` or `distance_threshold`. `AgglomerativeLinkage` is re-exported from the shared [linkage.py](../../../linkage.py).
 
 ## Components
 

@@ -26,7 +26,9 @@ class AgglomerativeClusteringParameters(ClusteringParameters):
         The linkage distance above which clusters are not merged; None when
         stopping by cluster count.
     metric : AgglomerativeMetric
-        The metric for the Agglomerative Clustering algorithm.
+        The metric for the Agglomerative Clustering algorithm. The default
+        PRECOMPUTED clusters a square distance matrix; use EUCLIDEAN for
+        feature vectors, which ward linkage requires.
     linkage : AgglomerativeLinkage
         The linkage for the Agglomerative Clustering algorithm.
     """

@@ -2,27 +2,25 @@
 
 ## Overview
 
-Clustering (`clustering`) is a Python package that wraps scikit-learn cluster estimators behind a small, consistent API: parameter dataclasses build `ClusteringProcessor` instances with `fit` and `fit_predict`; processors for methods that can label unseen data also offer `predict`.
+Clustering (`clustering`) wraps scikit-learn cluster estimators, plus from-scratch methods scikit-learn lacks, behind one API: parameter dataclasses build processors with `fit` and `fit_predict`, and methods that can label unseen data also offer `predict`. `KReciprocalReranker` refines pairwise distances before clustering them as a precomputed matrix. Everything is exported from the top-level `clustering` package.
 
-Supported method families include K-Means, agglomerative clustering, DBSCAN, HDBSCAN, Gaussian mixture models, and shared nearest neighbor (SNN) clustering. `KReciprocalReranker` refines pairwise distances with k-reciprocal re-ranking before clustering with a precomputed metric. All parameter classes, rerankers, and enums are exported from the top-level `clustering` package.
-
-For module-level design notes, see [src/clustering/README.md](src/clustering/README.md).
+| Method | Parameters | `predict` on unseen data | Precomputed distances | Noise label `-1` |
+|---|---|---|---|---|
+| K-Means | `KMeansParameters` | Yes | No | No |
+| Gaussian mixture | `GMMParameters` | Yes | No | No |
+| Agglomerative | `AgglomerativeClusteringParameters` | No | Yes | No |
+| DBSCAN | `DBSCANParameters` | No | Yes | Yes |
+| HDBSCAN | `HDBSCANParameters` | No | Yes | Yes |
+| Shared nearest neighbor | `SNNParameters` | No | Yes | Yes |
+| Cannot-link agglomerative | `CannotLinkAgglomerativeClusteringParameters` | No | Required | No |
 
 ## Installation
-
-From the package root (the directory containing `pyproject.toml`):
 
 ```bash
 pip install .
 ```
 
-For development:
-
-```bash
-pip install -e .
-```
-
-## Quick example
+## Usage
 
 ```python
 import numpy as np
@@ -32,51 +30,19 @@ from clustering import KMeansParameters
 rng = np.random.default_rng(0)
 X = np.vstack([rng.standard_normal((40, 2)), rng.standard_normal((40, 2)) + 5.0])
 
-proc = KMeansParameters(n_clusters=2, random_state=42).build_processor()
-result = proc.fit_predict(X)
+processor = KMeansParameters(n_clusters=2, random_state=42).build_processor()
+result = processor.fit_predict(X)
 print(result.labels)
-```
-
-Density-based methods label noise points with `-1`:
-
-```python
-from clustering import DBSCANParameters
-
-proc = DBSCANParameters(eps=0.5, min_samples=5).build_processor()
-labels = proc.fit_predict(X)
 ```
 
 Re-rank distances first, then cluster them as a precomputed matrix:
 
 ```python
-from clustering import DBSCANMetric, KReciprocalReranker
+from clustering import DBSCANMetric, DBSCANParameters, KReciprocalReranker
 
 distances = KReciprocalReranker(n_reciprocal_neighbors=20).rerank(X)
-proc = DBSCANParameters(
+processor = DBSCANParameters(
     eps=0.6, min_samples=4, metric=DBSCANMetric.PRECOMPUTED
 ).build_processor()
-labels = proc.fit_predict(distances)
+labels = processor.fit_predict(distances)
 ```
-
-## Notes
-
-- `fit_predict` and `labels` return `ClusteringLabels`, an immutable wrapper around a read-only 1-D `numpy.int64` vector (`ClusteringLabels.labels`).
-- `labels` returns the training labels of the last `fit` / `fit_predict`; reading it before fitting raises `sklearn.exceptions.NotFittedError`.
-- Only K-Means and GMM support `predict` on unseen data: their parameters build an `InductiveClusteringProcessor`. Agglomerative, DBSCAN, HDBSCAN, SNN, and cannot-link processors have no `predict` method at all, so calling it is a type error; use `fit_predict` on the training data.
-
-## Development
-
-```bash
-uv sync
-uv run ruff check .
-uv run ruff format --check .
-uv run mypy
-uv run basedpyright src tests
-uv run pytest
-```
-
-The same checks run in CI on every push to `main` and every pull request.
-
-## License
-
-Released under the [MIT License](LICENSE).

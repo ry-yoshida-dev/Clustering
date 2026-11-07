@@ -2,7 +2,7 @@
 
 ## Overview
 
-Parameter classes and enums for each supported clustering method. Every parameter class validates its fields on construction and builds a `ClusteringProcessor` via `build_processor()`.
+Parameter classes and enums for each supported clustering method.
 
 ## Components
 

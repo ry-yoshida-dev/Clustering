@@ -8,7 +8,7 @@ Parameters for scikit-learn `DBSCAN`. Noise points are labeled `-1`; `predict` o
 
 | Component | Description |
 |-----------|-------------|
-| [parameter.py](./parameter.py) | `DBSCANParameters` (`eps`, `min_samples`, `metric`, `algorithm`, `leaf_size`). |
+| [parameter.py](./parameter.py) | `DBSCANParameters`. |
 | [algorithm.py](./algorithm.py) | `DBSCANAlgorithm` enum for the nearest neighbor search backend. |
 | [metric.py](./metric.py) | `DBSCANMetric` enum of supported distance metrics. |
 

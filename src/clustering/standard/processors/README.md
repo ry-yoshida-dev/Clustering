@@ -2,7 +2,7 @@
 
 ## Overview
 
-Concrete `ClusteringProcessor` implementations that wrap cluster estimators behind a unified API. Each processor pairs with a matching protocol module under [protocols/](./protocols/).
+Concrete processors that wrap cluster estimators behind a unified API.
 
 ## Components
 
